@@ -18,5 +18,8 @@
     <ClCompile Include="unit\Base64Test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\SpreadCpp\include\cpp\util\Base64.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

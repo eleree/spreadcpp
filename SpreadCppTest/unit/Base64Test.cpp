@@ -10,6 +10,7 @@
 
 #include <cpp/util/Base64.h>
 
+using namespace cpp::util;
 class Base64Test : public CPPUNIT_NS::TestFixture
 {
 	CPPUNIT_TEST_SUITE(Base64Test);
@@ -24,12 +25,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(Base64Test);
 
 void Base64Test::testSolution()
 {
-
-	CPPUNIT_ASSERT_EQUAL(0, 0);
-	CPPUNIT_ASSERT_EQUAL(2, 2);
-	CPPUNIT_ASSERT_EQUAL(2, 2);
-	CPPUNIT_ASSERT_EQUAL(2, 2);
-
+	std::string testString1 = "abc";
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString1).compare("YWJj"),0);
 }
 
 

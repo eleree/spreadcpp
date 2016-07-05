@@ -15,10 +15,10 @@ namespace cpp{
 		public:
 			Base64();
 			~Base64();
-			std::string encode(std::string inputStr);
-			std::string decode(std::string inputStr);
-			int32_t encode(const char * inputData, const uint32_t inputLen, char * outputBuf, uint32_t * outputLen, uint32_t maxOutputLen);
-			int32_t decode(const char * inputData, const uint32_t inputLen, char * outputBuf, uint32_t * outputLen, uint32_t maxOutputLen);
+			static std::string encode(std::string inputStr);
+			static std::string decode(std::string inputStr);
+			static int32_t encode(const char * inputData, const uint32_t inputLen, char * outputBuf, uint32_t * outputLen, uint32_t maxOutputLen);
+			static int32_t decode(const char * inputData, const uint32_t inputLen, char * outputBuf, uint32_t * outputLen, uint32_t maxOutputLen);
 		private:
 			static const char _base64EncodeTable[65];
 			static const char _base64DecodeTable[256];

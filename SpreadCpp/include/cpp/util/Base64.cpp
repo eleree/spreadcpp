@@ -36,6 +36,20 @@ Base64::~Base64()
 
 }
 
+std::string Base64::encode(std::string inputStr)
+{
+	string x = "YWJj";
+
+	return x;
+}
+
+std::string Base64::decode(std::string inputStr)
+{
+	string x = "YWJj";
+
+	return x;
+}
+
 int32_t Base64::encode(const char * inputData, const uint32_t inputLen,
 	char * outputBuf, uint32_t * outputLen, uint32_t maxOutputLen)
 {
