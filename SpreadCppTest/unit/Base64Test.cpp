@@ -25,8 +25,22 @@ CPPUNIT_TEST_SUITE_REGISTRATION(Base64Test);
 
 void Base64Test::testSolution()
 {
-	std::string testString1 = "abc";
-	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString1).compare("YWJj"),0);
+	std::string testString1 = "";
+	std::string testString2 = "a";
+	std::string testString3 = "ab";
+	std::string testString4 = "abc";
+	std::string testString5 = "abcd";
+	std::string testString6 = "abcde";
+	std::string testString7 = "abcdef";
+	std::string testString8 = "abcdefg";
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString1).compare(""),0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString2).compare("YQ=="), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString3).compare("YWI="), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString4).compare("YWJj"), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString5).compare("YWJjZA=="), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString6).compare("YWJjZGU="), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString7).compare("YWJjZGVm"), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString8).compare("YWJjZGVmZw=="), 0);
 }
 
 

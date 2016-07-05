@@ -38,9 +38,13 @@ Base64::~Base64()
 
 std::string Base64::encode(std::string inputStr)
 {
-	string x = "YWJj";
-
-	return x;
+	int32_t outputLen = inputStr.size()/3*4 + ((inputStr.size() % 3 )!=0?4:0)+ 1;
+	char * outputBuf = new char[outputLen];
+	memset(outputBuf, 0, outputLen);
+	Base64::encode(inputStr.c_str(), (uint32_t)inputStr.size(), outputBuf, NULL, outputLen);
+	string outputStr = string(outputBuf);
+	delete outputBuf;
+	return outputStr;
 }
 
 std::string Base64::decode(std::string inputStr)
@@ -75,7 +79,8 @@ int32_t Base64::encode(const char * inputData, const uint32_t inputLen,
 	for (uint32_t i = 0; i < (3 - inputLen % 3) % 3; i++)
 		outputBuf[j - i - 1] = '=';
 
-	*outputLen = j;
+	if (outputLen!=NULL)
+		*outputLen = j;
 
 	return 0;
 }
@@ -104,7 +109,8 @@ int32_t Base64::decode(const char * inputData, const uint32_t inputLen,
 		j--;
 	if (inputData[inputLen - 2] == '=')
 		j--;
-	*outputLen = j;
+	if (outputLen != NULL)
+		*outputLen = j;
 
 	return 0;
 }
