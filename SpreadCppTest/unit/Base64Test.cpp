@@ -37,8 +37,11 @@ void Base64Test::testEncode()
 	std::string testString8 = "abcdefg";
 	std::string testString9 = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.";	
 	std::string testString9Result = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
-	std::string testString10 = "a\0\0";
-	cout << endl << testString10.size() << endl;
+	std::string testString10("\0",1);
+	std::string testString11("\0\0", 2);
+	std::string testString12("\0\0\0", 3);
+	std::string testString13("\0\0\0\0", 4);
+
 	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString1).compare(""),0);
 	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString2).compare("YQ=="), 0);
 	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString3).compare("YWI="), 0);
@@ -47,7 +50,10 @@ void Base64Test::testEncode()
 	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString6).compare("YWJjZGU="), 0);
 	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString7).compare("YWJjZGVm"), 0);
 	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString8).compare("YWJjZGVmZw=="), 0);
-	//CPPUNIT_ASSERT_EQUAL(Base64::encode(testString10).compare("AA=="), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString10).compare("AA=="), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString11).compare("AAA="), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString12).compare("AAAA"), 0);
+	CPPUNIT_ASSERT_EQUAL(Base64::encode(testString13).compare("AAAAAA=="), 0);
 
 }
 
@@ -78,7 +84,6 @@ void Base64Test::testDecode()
 
 int main(int argc, char ** argv)
 {
-	std::cout << "Bas64 Test" << std::endl;
 	CPPUNIT_NS::TestResult controller;
 	CPPUNIT_NS::TestResultCollector result;
 	controller.addListener(&result);
