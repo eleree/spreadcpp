@@ -65,7 +65,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\cpp\lang\Thread.h" />
+    <ClInclude Include="include\cpp\util\ArrayList.h" />
     <ClInclude Include="include\cpp\util\Base64.h" />
+    <ClInclude Include="include\cpp\util\List.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp" />

@@ -18,6 +18,15 @@
     <ClInclude Include="include\cpp\util\Base64.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\cpp\util\List.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\lang\Thread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\util\ArrayList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp">
