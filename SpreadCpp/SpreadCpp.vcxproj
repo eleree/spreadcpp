@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp" />
+    <ClCompile Include="include\cpp\util\LinkedList.h" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

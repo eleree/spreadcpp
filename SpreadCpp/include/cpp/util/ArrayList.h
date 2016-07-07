@@ -7,10 +7,8 @@
 using namespace std;
 
 
-
 template<typename T>
 class ArrayList : public List<T>
-//class ArrayList
 {
 public:
 	ArrayList(){ cout << "Arrary List" << endl; }

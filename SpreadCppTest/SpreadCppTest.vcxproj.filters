@@ -21,5 +21,13 @@
     <ClCompile Include="..\SpreadCpp\include\cpp\util\Base64.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="unit\LinkedListTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="unit\LinkedListTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
