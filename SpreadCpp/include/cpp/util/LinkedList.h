@@ -42,17 +42,25 @@ namespace cpp{
 				iterator(){};
 				iterator & operator++()
 				{
+					_node = _node->next;
+					return *this;
+				}
 
+				iterator & operator++(int)
+				{
+					iterator iter = *this;
+					++*this;
+					return iter;
 				}
 
 				const T & operator*() const
 				{
-
+					return _node->t;
 				}
 
 				bool operator!=(iterator& rhs) const
 				{
-					return this->_node != rhs->_node;
+					return this->_node != rhs._node;
 				}
 
 			protected:
@@ -67,9 +75,15 @@ namespace cpp{
 				return iter;
 			}
 
-			iterator end()
+			iterator rbegin()
 			{
-				iterator iter(_tail->next);
+				iterator iter(_tail);
+				return iter;
+			}
+
+			iterator rend()
+			{
+				iterator iter(_head);
 				return iter;
 			}
 
@@ -116,11 +130,32 @@ namespace cpp{
 				return _head->next->t;
 			}
 
-			void clear()
+			T back(void)
 			{
-
+				return _tail->t;
 			}
 
+			T removeLast()
+			{
+				T t = _tail->t;
+				_end->prev = _tail->prev;
+				delete _tail;
+				_end->prev->next = _end;				
+				_tail = _end->prev;
+				_size--;
+				return t;
+			}
+
+			void clear()
+			{
+				while (!isEmpty())
+					removeLast();
+			}
+
+			bool isEmpty(void)
+			{
+				return _size == 0;
+			}
 
 		private:
 			int32_t _size;

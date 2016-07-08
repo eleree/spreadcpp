@@ -20,10 +20,14 @@ int main(int argc, char ** argv)
 	
 	int n = 0;
 	LinkedList<int> x;
-	x.add(1);
-	cout << x.front() << endl;
-	x.remove(1);
-	x.add(2);
-	cout << x.front() << endl;
+
+	for (int i = 0; i < 2; i++)
+		x.add(i);
+	LinkedList<int>::iterator iter;
+	for (LinkedList<int>::iterator it = x.begin(); it != x.end(); ++it)
+		std::cout << ' ' << *it;
+	cout << endl;
+	x.clear();
+	cout << x.size() << endl;
 	return 0;
 }
