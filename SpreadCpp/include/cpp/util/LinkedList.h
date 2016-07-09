@@ -33,7 +33,7 @@ namespace cpp{
 
 			~LinkedList()
 			{
-				cout << "~Linked List" << endl;
+				clear();
 			}
 			
 			class iterator

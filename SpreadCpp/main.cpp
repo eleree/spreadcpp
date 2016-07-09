@@ -1,33 +1,45 @@
 #include <cpp/util/ArrayList.h>
 #include <cpp/util/LinkedList.h>
-
+#include <cpp/lang/Thread.h>
 using namespace cpp::util;
-int testList(List<int> list)
+
+class TestThread : public Thread
 {
-	return 0;
-}
+public:
+	TestThread() :_isStop(Thread::RUNNING){}
+	void run(void)
+	{
+		int i = 0;
+		while (_isStop == Thread::RUNNING)
+		{
+			cout << "Test" << endl;
+			Thread::sleep(1000);
+		}
+		
+	}
+
+	void stop()
+	{
+		_isStop = Thread::STOP;
+	}
+private:
+	int32_t _isStop;
+};
 
 int main(int argc, char ** argv)
 {
-	/*
-	ArrayList<int> x;
-	testList(x);
+	TestThread *testThread = new TestThread();
+	testThread->start();
+	Thread::sleep(3000);
+	testThread->stop();
+	testThread->join(0);
+	delete testThread;
 
-	ArrayList<int> * pd = new ArrayList<int>;
-	List<int> * pp = (ArrayList<int> *) pd;
-	delete pp;
-	*/
-	
-	int n = 0;
-	LinkedList<int> x;
-
-	for (int i = 0; i < 2; i++)
-		x.add(i);
-	LinkedList<int>::iterator iter;
-	for (LinkedList<int>::iterator it = x.begin(); it != x.end(); ++it)
-		std::cout << ' ' << *it;
-	cout << endl;
-	x.clear();
-	cout << x.size() << endl;
+	cout << "Terminate Thread" << endl;
+	testThread = new TestThread();
+	testThread->start();
+	Thread::sleep(1000);
+	testThread->terminate(-1);
+	Thread::sleep(5000);
 	return 0;
 }

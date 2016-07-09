@@ -27,6 +27,15 @@
     <ClInclude Include="include\cpp\util\ArrayList.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\cpp\util\Queue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\util\BlockingQueue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\util\Timer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp">
