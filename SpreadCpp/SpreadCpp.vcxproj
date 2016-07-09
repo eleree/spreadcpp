@@ -72,6 +72,7 @@
     <ClInclude Include="include\cpp\util\Base64.h" />
     <ClInclude Include="include\cpp\util\BlockingQueue.h" />
     <ClInclude Include="include\cpp\util\List.h" />
+    <ClInclude Include="include\cpp\util\Mutex.h" />
     <ClInclude Include="include\cpp\util\Queue.h" />
     <ClInclude Include="include\cpp\util\Timer.h" />
   </ItemGroup>

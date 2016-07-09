@@ -75,6 +75,12 @@ namespace cpp{
 				return iter;
 			}
 
+			iterator end()
+			{
+				iterator iter(_tail->next);
+				return iter;
+			}
+
 			iterator rbegin()
 			{
 				iterator iter(_tail);
