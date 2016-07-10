@@ -2,30 +2,9 @@
 #include <cpp/util/LinkedList.h>
 #include <cpp/lang/Thread.h>
 #include <cpp/util/Timer.h>
+#include <cpp/util/Mutex.h>
+#include <cpp/util/LockGuard.h>
 using namespace cpp::util;
-
-class TestThread : public Thread
-{
-public:
-	TestThread() :_isStop(Thread::RUNNING){}
-	void run(void)
-	{
-		int i = 0;
-		while (_isStop == Thread::RUNNING)
-		{
-			cout << "Test" << endl;
-			Thread::sleep(1000);
-		}
-		
-	}
-
-	void stop()
-	{
-		_isStop = Thread::STOP;
-	}
-private:
-	int32_t _isStop;
-};
 
 class TestTimerTask : public Timer::TimerTask
 {
@@ -65,27 +44,11 @@ private:
 
 int main(int argc, char ** argv)
 {
-	Timer timer;
-	TestInnerTimerTask *testInnerTimerTask = new TestInnerTimerTask();
+	//Timer timer;
+	//TestInnerTimerTask *testInnerTimerTask = new TestInnerTimerTask();
 	//TestTimerTask *testTimerTask = new TestTimerTask();
 	//timer.schedule(testTimerTask, 1, 1);
-	timer.schedule(&testInnerTimerTask->_timerTask, 1, 1);
-
+	//timer.schedule(&testInnerTimerTask->_timerTask, 1, 1);
+	//return 0;
 	return 0;
-	/*
-	TestThread *testThread = new TestThread();
-	testThread->start();
-	Thread::sleep(3000);
-	testThread->stop();
-	testThread->join(0);
-	delete testThread;
-
-	cout << "Terminate Thread" << endl;
-	testThread = new TestThread();
-	testThread->start();
-	Thread::sleep(1000);
-	testThread->terminate(-1);
-	Thread::sleep(5000);
-	return 0;
-	*/
 }

@@ -39,6 +39,9 @@
     <ClInclude Include="include\cpp\util\Mutex.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\cpp\util\LockGuard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp">
