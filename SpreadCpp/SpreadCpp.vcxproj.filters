@@ -42,6 +42,9 @@
     <ClInclude Include="include\cpp\util\LockGuard.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\cpp\net\HttpUrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp">
@@ -52,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="include\cpp\util\LinkedList.h">
       <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="include\cpp\net\HttpUrl.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
