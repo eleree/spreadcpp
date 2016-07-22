@@ -34,3 +34,45 @@ HttpUrl& HttpUrl::username(string username)
 	_username = username;
 	return *this;
 }
+
+string HttpUrl::password(void)
+{
+	return _password;
+}
+
+HttpUrl& HttpUrl::password(string password)
+{
+	_password = password;
+	return *this;
+}
+
+string HttpUrl::host(void)
+{
+	return _host;
+}
+
+HttpUrl& HttpUrl::host(string host)
+{
+	_host = host;
+	return *this;
+}
+
+string HttpUrl::toString(void)
+{
+	string url;
+	url.append(_scheme);
+	url.append("://");
+	if ( ! _username.empty() || ! _password.empty())
+	{
+		url.append(_username);
+		if ( ! _password.empty())
+		{
+			url.append(":");
+			url.append(_password);
+		}
+		url.append("@");
+	}
+	
+	url.append(_host);
+	return url;
+}

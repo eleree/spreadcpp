@@ -14,7 +14,7 @@ namespace cpp{
 	namespace net{
 		class HttpUrl{
 		public:
-				
+
 			HttpUrl();
 			HttpUrl(string url);
 			
@@ -26,27 +26,30 @@ namespace cpp{
 			HttpUrl& username(string username);
 
 			string password(void);
-			int32_t password(string password);
+			HttpUrl& password(string password);
 
 			string host(void);
-			int32_t host(string host);
+			HttpUrl& host(string host);
 
 			uint16_t port();
-			int32_t port(uint16_t port);
+			HttpUrl& port(uint16_t port);
 
 			string fragment(void);
-			int32_t addFragment(string fragment);
+			HttpUrl& addFragment(string fragment);
 
 			list<string> path(void);
 			int32_t addPath(string path);
 
 			list<string> query(void);
-			int32_t addQuery(string name, string value);
+			HttpUrl& addQuery(string name, string value);
 
 			list<string> encodedPath(void);
 			list<string> encodedQuery(void);
 
+			string toString(void);
 		private:
+			const string pathEncodeSet = " \"<>^`{}|/\\?#";
+
 			string _scheme = "http";
 			string _username;
 			string _password;

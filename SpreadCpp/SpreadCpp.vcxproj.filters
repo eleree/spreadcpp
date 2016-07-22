@@ -45,6 +45,15 @@
     <ClInclude Include="include\cpp\net\HttpUrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\cpp\net\HttpRequest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\net\Socket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\net\SocketFactory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp">
@@ -57,6 +66,9 @@
       <Filter>头文件</Filter>
     </ClCompile>
     <ClCompile Include="include\cpp\net\HttpUrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="include\cpp\net\Socket.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
