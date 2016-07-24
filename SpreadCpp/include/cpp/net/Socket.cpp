@@ -6,6 +6,9 @@ bool Socket::_init = false;
 
 Socket::Socket()
 {
+	_isOutputShutdown = false;
+	_isInputShutdown = false;
+	_isClosed = false;
 #if defined(_WIN32) ||  defined(_WIN64)
 	int result;
 	if (_init == false)
@@ -54,6 +57,8 @@ int32_t Socket::connect(void)
 		cout << "Invalid Socket" << endl;
 		_socket = INVALID_SOCKET;
 	}
+
+	freeaddrinfo(result);
 	return rc;
 }
 
@@ -76,6 +81,10 @@ int32_t Socket::recv(char * recvBuf, uint32_t recvLen)
 
 int32_t Socket::close()
 {
+	_isOutputShutdown = true;
+	_isInputShutdown = true;
+	_isClosed = true;
+
 #if defined(_WIN32) ||  defined(_WIN64)
 	return closesocket(_socket);
 #endif
@@ -83,6 +92,7 @@ int32_t Socket::close()
 
 int32_t Socket::shutdownInput()
 {
+	_isInputShutdown = true;
 #if defined(_WIN32) ||  defined(_WIN64)
 	return shutdown(_socket, SD_RECEIVE);
 #endif
@@ -90,6 +100,7 @@ int32_t Socket::shutdownInput()
 
 int32_t Socket::shutdownOutput()
 {
+	_isOutputShutdown = true;
 #if defined(_WIN32) ||  defined(_WIN64)
 	return shutdown(_socket, SD_SEND);
 #endif

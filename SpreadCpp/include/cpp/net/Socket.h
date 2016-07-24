@@ -43,6 +43,10 @@ namespace cpp{
 		private:
 			string _host;
 			uint16_t _port;
+			bool _isClosed;
+			bool _isConnected;
+			bool _isInputShutdown;
+			bool _isOutputShutdown;
 
 #if defined(_WIN32) ||  defined(_WIN64)
 			static bool _init;

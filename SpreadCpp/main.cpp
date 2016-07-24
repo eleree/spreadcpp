@@ -87,8 +87,7 @@ int main(int argc, char ** argv)
 				Cookie: language=en_US\r\n\
 				If-Modified-Since: Tue Jul 19 16:02:43 2016\r\n\0";
 	//char *sendbuf = "GET /login.html HTTP/1.1\r\n  ";
-	char *sendbuf =   "GET /login.html2 HTTP/1.1 \r\n\
-				Host: 192.168.1.1\r\n\
+	char *sendbuf =   "GET /login.html HTTP/1.1 \r\n\Host: 192.168.1.1\r\n\
 				Connection : keep - alive\r\n\
 				Cache - Control: max - age = 0\r\n\
 			    Accept : text / html, application / xhtml + xml, application / xml; q = 0.9, image / webp, */*;q=0.8\r\n\
@@ -103,7 +102,7 @@ int main(int argc, char ** argv)
 	int iResult;
 	int recvbuflen = DEFAULT_BUFLEN;
 	Socket clientSocket;
-	clientSocket.connect("192.168.1.1", 80);
+	clientSocket.connect("192.168.18.106", 80);
 	cout << clientSocket.send(sendbuf, (int)strlen(sendbuf)) << endl;
 	do {
 
