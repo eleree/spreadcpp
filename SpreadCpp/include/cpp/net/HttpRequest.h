@@ -10,6 +10,8 @@
 #include <memory>
 
 #include <cpp/net/HttpUrl.h>
+#include <cpp/net/HttpHeader.h>
+#include <cpp/net/HttpRequestBody.h>
 
 using namespace std;
 using namespace cpp::net;
@@ -24,6 +26,8 @@ namespace cpp{
 
 		private:
 			HttpUrl _httpUrl;
+			HttpHeader _httpHeader;
+			HttpRequestBody _httpRequestBody;
 			string _method;			
 		};
 	}

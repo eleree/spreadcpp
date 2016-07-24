@@ -9,7 +9,7 @@ template<typename T>
 class List{
 public:
 	List(){};
-	virtual ~List(){ cout << "~List" << endl; };
+	virtual ~List(){};
 	virtual int32_t add(T) { return 0; };
 	virtual int32_t remove(T) { return 0; };
 };

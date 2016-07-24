@@ -27,12 +27,33 @@
     <ClCompile Include="unit\ThreadTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="unit\HttpHeaderTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\SocketTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpreadCpp\include\cpp\net\Socket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\HttpUrlTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="unit\LinkedListTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="unit\ThreadTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="unit\HttpHeaderTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="unit\SocketTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="unit\HttpUrlTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -62,18 +62,18 @@ void ThreadTest::testThread()
 	Thread::sleep(3000);
 	testThread->stop();
 	testThread->join(0);
-	delete testThread;
 	CPPUNIT_ASSERT_EQUAL(testThread->status(), (int32_t)Thread::STOP);
+	delete testThread;
 	cout << "Test Terminate Thread" << endl;
 	testThread = new TestThread();
 	testThread->start();
 	Thread::sleep(500);
 	testThread->terminate(-1);
-	delete testThread;
 	CPPUNIT_ASSERT_EQUAL(testThread->status(), (int32_t)Thread::TERMINATED);
+	delete testThread;
 
-	TestMutexThread *testMutexThread1 = new TestMutexThread(1);
-	TestMutexThread *testMutexThread2 = new TestMutexThread(2);
-	testMutexThread1->start();
-	testMutexThread2->start();
+	//TestMutexThread *testMutexThread1 = new TestMutexThread(1);
+	//TestMutexThread *testMutexThread2 = new TestMutexThread(2);
+	//testMutexThread1->start();
+	//testMutexThread2->start();
 }

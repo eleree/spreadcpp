@@ -54,6 +54,12 @@
     <ClInclude Include="include\cpp\net\SocketFactory.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\cpp\net\HttpHeader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\net\HttpRequestBody.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp">

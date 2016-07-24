@@ -1,3 +1,5 @@
+#define WIN32_LEAN_AND_MEAN
+
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/CompilerOutputter.h>
@@ -98,5 +100,6 @@ int main(int argc, char ** argv)
 	CPPUNIT_NS::CompilerOutputter outputter(&result, CPPUNIT_NS::stdCOut());
 	outputter.write();
 
+	system("pause");
 	return 0;
 }

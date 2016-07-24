@@ -68,7 +68,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\cpp\lang\Thread.h" />
+    <ClInclude Include="include\cpp\net\HttpHeader.h" />
     <ClInclude Include="include\cpp\net\HttpRequest.h" />
+    <ClInclude Include="include\cpp\net\HttpRequestBody.h" />
     <ClInclude Include="include\cpp\net\HttpUrl.h" />
     <ClInclude Include="include\cpp\net\Socket.h" />
     <ClInclude Include="include\cpp\net\SocketFactory.h" />
