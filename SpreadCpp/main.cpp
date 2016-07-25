@@ -9,10 +9,11 @@
 #include <cpp/net/HttpUrl.h>
 #include <cpp/net/Socket.h>
 #include <cpp/net/SocketFactory.h>
-
+#include <cpp/lang/String.h>
 
 using namespace cpp::util;
 using namespace cpp::net;
+using namespace cpp::lang;
 
 class TestTimerTask : public Timer::TimerTask
 {
@@ -59,11 +60,13 @@ int main(int argc, char ** argv)
 	//timer.schedule(&testInnerTimerTask->_timerTask, 1, 1);
 	//return 0;
 
-	string x = "中";
+	string x = "中国";
+	x = String::convert(x, String::Charset::GB2312, String::Charset::UTF8);
 	for (size_t i = 0; i < strlen(x.c_str()); i++)
 		printf("%#02X ",(uint8_t)(*(x.c_str()+i)));
+	cout << endl;
 	cout << x << endl;
-	uint8_t utf8Test[] = { 0xE4,0xB8,0xAD,0x00 };
+	uint8_t utf8Test[] = { 0xD6,0xD0,0x00 };
 	printf("%s", utf8Test);
 	printf("\n");
 
@@ -75,7 +78,6 @@ int main(int argc, char ** argv)
 		cout << httpUrl->toString() << endl;
 	}
 
-	
 	system("pause");
 
 	return 0;

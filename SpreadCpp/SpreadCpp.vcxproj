@@ -67,6 +67,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\cpp\lang\CharsetDecoder.h" />
+    <ClInclude Include="include\cpp\lang\GB2312CharsetDecoder.h" />
+    <ClInclude Include="include\cpp\lang\String.h" />
     <ClInclude Include="include\cpp\lang\Thread.h" />
     <ClInclude Include="include\cpp\net\HttpHeader.h" />
     <ClInclude Include="include\cpp\net\HttpRequest.h" />
@@ -84,6 +87,8 @@
     <ClInclude Include="include\cpp\util\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\cpp\lang\GB2312CharsetDecoder.cpp" />
+    <ClCompile Include="include\cpp\lang\String.cpp" />
     <ClCompile Include="include\cpp\net\HttpUrl.cpp" />
     <ClCompile Include="include\cpp\net\Socket.cpp" />
     <ClCompile Include="include\cpp\util\Base64.cpp" />

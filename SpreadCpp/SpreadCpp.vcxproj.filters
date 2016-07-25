@@ -60,6 +60,15 @@
     <ClInclude Include="include\cpp\net\HttpRequestBody.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\cpp\lang\String.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\lang\GB2312CharsetDecoder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpp\lang\CharsetDecoder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp">
@@ -75,6 +84,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="include\cpp\net\Socket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="include\cpp\lang\String.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="include\cpp\lang\GB2312CharsetDecoder.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
