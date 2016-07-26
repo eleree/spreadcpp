@@ -10,7 +10,8 @@
 #include <cpp/net/Socket.h>
 #include <cpp/net/SocketFactory.h>
 #include <cpp/lang/String.h>
-
+#include <cpp/lang/UTF8CharsetEncoder.h>
+#include <cpp/net/HttpClient.h>
 using namespace cpp::util;
 using namespace cpp::net;
 using namespace cpp::lang;
@@ -51,6 +52,12 @@ private:
 	int32_t x;
 };
 
+class Test
+{
+public:
+	Test(){ cout << "Test" << endl; };
+	~Test(){ cout << "~Test" << endl; }
+};
 int main(int argc, char ** argv)
 {
 	//Timer timer;
@@ -59,16 +66,20 @@ int main(int argc, char ** argv)
 	//timer.schedule(testTimerTask, 1, 1);
 	//timer.schedule(&testInnerTimerTask->_timerTask, 1, 1);
 	//return 0;
-
-	string x = "中国";
+	/*
+	string x = "严";
 	x = String::convert(x, String::Charset::GB2312, String::Charset::UTF8);
 	for (size_t i = 0; i < strlen(x.c_str()); i++)
 		printf("%#02X ",(uint8_t)(*(x.c_str()+i)));
 	cout << endl;
 	cout << x << endl;
-	uint8_t utf8Test[] = { 0xD6,0xD0,0x00 };
-	printf("%s", utf8Test);
-	printf("\n");
+	uint8_t utf8Test[] = { 0x4E,0x2D,0x00 };//中
+	printf("-------------------\n");
+	x = String::convert((string)(const char *)utf8Test, String::Charset::UNICODE, String::Charset::UTF8);
+	cout << x << endl;
+	for (size_t i = 0; i < strlen(x.c_str()); i++)
+		printf("%#02X ", (uint8_t)(*(x.c_str() + i)));
+	cout << endl;
 
 	{
 		auto httpUrl = std::make_shared<HttpUrl>();
@@ -77,7 +88,21 @@ int main(int argc, char ** argv)
 		cout << httpUrl->host() << endl;
 		cout << httpUrl->toString() << endl;
 	}
+	*/
 
+	/*
+	{
+		shared_ptr<Test> t = make_shared<Test>();
+	}
+	*/
+	{
+		shared_ptr<HttpClient> xxxx = HttpClient::getInstance();
+		xxxx->test();
+		shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
+		httpClient->test();		
+		cout << httpClient.use_count() << endl;
+	}
+	
 	system("pause");
 
 	return 0;

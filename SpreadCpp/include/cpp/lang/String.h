@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string>
 #include <cpp/lang/GB2312CharsetDecoder.h>
+#include <cpp/lang/UTF8CharsetEncoder.h>
 using namespace std;
 
 namespace cpp{
