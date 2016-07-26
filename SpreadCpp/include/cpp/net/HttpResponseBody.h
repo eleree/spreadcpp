@@ -5,6 +5,9 @@
 namespace cpp{
 	namespace net{
 		class HttpResponseBody{
+		public:
+			string toString(void){ return "Mock Result"; };
+		private:
 
 		};
 	}

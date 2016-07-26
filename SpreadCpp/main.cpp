@@ -94,7 +94,7 @@ int main(int argc, char ** argv)
 	{
 		shared_ptr<Test> t = make_shared<Test>();
 	}
-	*/
+	
 	{
 		shared_ptr<HttpClient> xxxx = HttpClient::getInstance();
 		xxxx->test();
@@ -102,7 +102,18 @@ int main(int argc, char ** argv)
 		httpClient->test();		
 		cout << httpClient.use_count() << endl;
 	}
-	
+	*/
+	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
+
+	HttpRequest httpRequest;
+	HttpResponse httpResponse  = httpClient->execute(httpRequest);
+	if (httpResponse.isSuccess())
+	{
+		cout << httpResponse.body().toString() << endl;
+	}else{
+		cout << "Request Http Request Fail" << endl;
+	}
+
 	system("pause");
 
 	return 0;

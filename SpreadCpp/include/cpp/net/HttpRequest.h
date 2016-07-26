@@ -21,8 +21,8 @@ namespace cpp{
 		class HttpRequest
 		{
 		public:
-			HttpRequest();
-			~HttpRequest();
+			HttpRequest(){};
+			~HttpRequest(){};
 
 		private:
 			HttpUrl _httpUrl;

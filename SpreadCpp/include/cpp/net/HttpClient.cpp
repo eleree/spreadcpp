@@ -21,3 +21,10 @@ shared_ptr<HttpClient> HttpClient::getInstance(void)
 		return _httpClient.lock();
 	}
 }
+
+HttpResponse HttpClient::execute(HttpRequest request)
+{
+	HttpResponse httpResponse;
+	httpResponse.setSuccessStatus(true);
+	return httpResponse;
+}

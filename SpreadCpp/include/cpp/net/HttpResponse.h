@@ -12,8 +12,18 @@ namespace cpp{
 		class HttpResponse{
 		public:
 			bool isSuccess(void){ return _success; }
-			HttpResponseBody body(void);
-			HttpHeader head(void);
+			HttpResponseBody body(void)
+			{
+				return _responseBody;
+			}
+
+			HttpHeader head(void){
+				return _httpHeader;
+			}
+
+			void setSuccessStatus(bool isSuccess){
+				_success = isSuccess;
+			}
 
 		private:
 			HttpHeader _httpHeader;

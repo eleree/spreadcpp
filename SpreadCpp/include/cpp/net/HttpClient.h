@@ -32,7 +32,7 @@ namespace cpp{
 
 			~HttpClient(){ cout << "~HttpClient" << endl; }
 
-			HttpResponse execute(HttpRequest request);
+			HttpResponse execute(HttpRequest request);		
 
 		private:
 			string _cacheDir;
