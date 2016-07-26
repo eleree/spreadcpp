@@ -9,7 +9,10 @@
 #include <list>
 #include <memory>
 
+#include <cpp/net/HttpRequest.h>
+#include <cpp/net/HttpResponse.h>
 using namespace std;
+using namespace cpp::net;
 
 namespace cpp{
 	namespace net{
@@ -28,8 +31,16 @@ namespace cpp{
 			}
 
 			~HttpClient(){ cout << "~HttpClient" << endl; }
+
+			HttpResponse execute(HttpRequest request);
+
 		private:
+			string _cacheDir;
+			uint32_t cacheSize;
 			static weak_ptr<HttpClient> _httpClient;
+
+			HttpClient(const HttpClient &) = delete;
+			const HttpClient &operator =(const HttpClient &) = delete;
 		};
 	}
 }
