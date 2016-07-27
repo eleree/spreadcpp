@@ -9,6 +9,7 @@
 #include <list>
 #include <memory>
 
+#include <cpp/net/Socket.h>
 #include <cpp/net/HttpRequest.h>
 #include <cpp/net/HttpResponse.h>
 #include <cpp/net/HttpCallback.h>
@@ -48,7 +49,9 @@ namespace cpp{
 			HttpRequest followUp(HttpResponse response);
 			HttpResponse retryAndFollowInterceptor(HttpRequest request);
 			HttpResponse BridgeInterceptor(HttpRequest request);
-			
+			HttpResponse CacheInterceptor(HttpRequest request);
+			HttpResponse NetworkInterceptor(HttpRequest request);
+
 		};
 	}
 }

@@ -9,7 +9,7 @@ namespace cpp{
 	namespace net{
 		class HttpRequestBody{
 		public:
-			string toString(void){ return ""; }
+			string toString(void){ return "xx"; }
 
 			string contentType(void)
 			{

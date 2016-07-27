@@ -73,15 +73,66 @@ HttpResponse HttpClient::retryAndFollowInterceptor(HttpRequest request)
 
 HttpResponse HttpClient::BridgeInterceptor(HttpRequest request)
 {
-	HttpResponse httpResponse;
 	cout << request.toString() << endl;
-	cout << request.header().toString() << endl;
 
 	if (request.header().get("Host").compare("") == 0)
 	{
-		request.header().set("Host", "192.168.1.1:8080");
-		cout << request.header().toString() << endl;
+		request.header().set("Host", "192.168.18.1");
 	}
 
+	if (request.header().get("Connection").compare("") == 0)
+	{
+		request.header().set("Connection", "Keep-Alive");
+	}
+
+	if (request.header().get("User-Agent").compare("") == 0)
+	{
+		request.header().set("User-Agent", "Spread HttpClient");
+	}
+	request.header().set("Cache-Control", " max-age=0");
+	request.header().set("Accept-Encoding", " gzip, deflate, sdch");
+	request.header().set("Accept-Language", " zh-CN,zh;q=0.8");
+	request.header().set("Accept", " text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+
+
+	cout << request.header().toString() << endl;
+	HttpResponse httpResponse = CacheInterceptor(request);
+
+	return httpResponse;
+}
+
+HttpResponse HttpClient::CacheInterceptor(HttpRequest request)
+{
+	HttpResponse httpResponse = NetworkInterceptor(request);
+	return httpResponse;
+
+}
+
+HttpResponse HttpClient::NetworkInterceptor(HttpRequest request)
+{
+	HttpResponse httpResponse;
+	Socket clientSocket;
+	clientSocket.connect("192.168.18.106", 80);
+	cout << "Start Connecting Socket" << endl;
+	string httpHeader = request.toHttpString();
+	cout << clientSocket.send((char *)httpHeader.c_str(), httpHeader.size()) << endl;
+
+	#define DEFAULT_BUFLEN 512
+	int iResult;
+	char recvbuf[DEFAULT_BUFLEN];
+	int recvbuflen = DEFAULT_BUFLEN;
+	memset(recvbuf, 0, DEFAULT_BUFLEN);
+	do {
+
+		iResult = clientSocket.recv(recvbuf, recvbuflen);
+		if (iResult > 0)
+			printf("Bytes received: %d,%s\n", iResult, recvbuf);
+		else if (iResult == 0)
+			printf("Connection closed\n");
+		else
+			printf("recv failed with error: %d\n", WSAGetLastError());
+
+	} while (iResult > 0);
+	httpResponse.setSuccessStatus(true);
 	return httpResponse;
 }

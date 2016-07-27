@@ -52,9 +52,19 @@ namespace cpp{
 			string toString(void)
 			{
 				string s;
-				s.append("URL: "+_httpUrl.toString()).append("\r\n");
-				s.append("Header: "+_httpHeader.toString()).append("\r\n");
-				s.append("RequestBody: "+_httpRequestBody.toString()).append("\r\n");
+				s.append("HttpRequest={");
+				s.append("HttpUrl="+_httpUrl.toString());
+				s.append(",HttpHeader="+_httpHeader.toString());
+				s.append(",HttpRequestBody="+_httpRequestBody.toString());
+				s.append("}");
+				return s;
+			}
+
+			string toHttpString(void)
+			{
+				string s;
+				s.append("GET / HTTP/1.1\r\n");
+				s.append(_httpHeader.toString());
 				return s;
 			}
 
