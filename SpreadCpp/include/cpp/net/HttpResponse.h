@@ -11,6 +11,14 @@ namespace cpp{
 	namespace net{
 		class HttpResponse{
 		public:
+			enum {
+				SUCCESS = 0,
+				TIMEOUT,
+				ROUTE_FAIL,
+				CONNECT_FAIL,
+				FOLLOW_OVERFLOW,
+			};
+
 			bool isSuccess(void){ return _success; }
 			HttpResponseBody body(void)
 			{
@@ -25,7 +33,18 @@ namespace cpp{
 				_success = isSuccess;
 			}
 
+			void status(int32_t status)
+			{
+				_status = status;
+			}
+
+			int32_t status(void)
+			{
+				return _status;
+			}
+
 		private:
+			int32_t _status;
 			HttpHeader _httpHeader;
 			HttpResponseBody _responseBody;
 			bool _success;

@@ -24,11 +24,46 @@ namespace cpp{
 			HttpRequest(){};
 			~HttpRequest(){};
 
+			HttpRequest(string url)
+			{				
+				_httpUrl = HttpUrl::parse(url);
+			}
+
+			HttpHeader& header(void)
+			{
+				return _httpHeader;
+			}
+
+			HttpUrl& url(void)
+			{
+				return _httpUrl;
+			};
+
+			bool needFollow(void)
+			{
+				return _follow;
+			}
+
+			void follow(bool f)
+			{
+				_follow = f;
+			}
+
+			string toString(void)
+			{
+				string s;
+				s.append("URL: "+_httpUrl.toString()).append("\r\n");
+				s.append("Header: "+_httpHeader.toString()).append("\r\n");
+				s.append("RequestBody: "+_httpRequestBody.toString()).append("\r\n");
+				return s;
+			}
+
 		private:
 			HttpUrl _httpUrl;
 			HttpHeader _httpHeader;
 			HttpRequestBody _httpRequestBody;
 			string _method;			
+			bool _follow;
 		};
 	}
 }

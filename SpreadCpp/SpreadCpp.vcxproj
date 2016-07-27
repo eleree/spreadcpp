@@ -73,6 +73,7 @@
     <ClInclude Include="include\cpp\lang\Thread.h" />
     <ClInclude Include="include\cpp\lang\UTF8CharsetEncoder.h" />
     <ClInclude Include="include\cpp\net\DNS.h" />
+    <ClInclude Include="include\cpp\net\HttpCallback.h" />
     <ClInclude Include="include\cpp\net\HttpClient.h" />
     <ClInclude Include="include\cpp\net\HttpHeader.h" />
     <ClInclude Include="include\cpp\net\HttpRequest.h" />

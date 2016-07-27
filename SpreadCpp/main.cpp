@@ -52,12 +52,6 @@ private:
 	int32_t x;
 };
 
-class Test
-{
-public:
-	Test(){ cout << "Test" << endl; };
-	~Test(){ cout << "~Test" << endl; }
-};
 int main(int argc, char ** argv)
 {
 	//Timer timer;

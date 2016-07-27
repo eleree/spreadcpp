@@ -76,3 +76,11 @@ string HttpUrl::toString(void)
 	url.append(_host);
 	return url;
 }
+
+
+HttpUrl HttpUrl::parse(string url)
+{
+	HttpUrl httpUrl;
+	httpUrl.scheme("http").host("www.qq.com");
+	return std::move(httpUrl);
+}

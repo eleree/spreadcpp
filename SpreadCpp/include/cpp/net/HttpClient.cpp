@@ -25,6 +25,63 @@ shared_ptr<HttpClient> HttpClient::getInstance(void)
 HttpResponse HttpClient::execute(HttpRequest request)
 {
 	HttpResponse httpResponse;
-	httpResponse.setSuccessStatus(true);
+	httpResponse = retryAndFollowInterceptor(request);	
+	return httpResponse;
+}
+
+int32_t HttpClient::enqueue(HttpRequest request, shared_ptr<HttpCallback> callback)
+{	
+	return 0;
+}
+
+HttpRequest HttpClient::followUp(HttpResponse response)
+{
+	HttpRequest httpRequest;
+	httpRequest.follow(false);
+	return httpRequest;
+}
+
+HttpResponse HttpClient::retryAndFollowInterceptor(HttpRequest request)
+{
+	uint32_t maxFollow = 20;
+	HttpResponse httpResponse;
+	while (1)
+	{
+		httpResponse = BridgeInterceptor(request);
+		if (httpResponse.status() == HttpResponse::ROUTE_FAIL)
+		{
+
+		}else if (httpResponse.status() == HttpResponse::CONNECT_FAIL){
+
+		}
+
+		HttpRequest followRequest = followUp(httpResponse);
+
+		if (!followRequest.needFollow())
+			return httpResponse;
+
+		if (--maxFollow)
+		{
+			httpResponse.status(HttpResponse::FOLLOW_OVERFLOW);
+			break;
+		}
+
+	}
+	
+	return httpResponse;
+}
+
+HttpResponse HttpClient::BridgeInterceptor(HttpRequest request)
+{
+	HttpResponse httpResponse;
+	cout << request.toString() << endl;
+	cout << request.header().toString() << endl;
+
+	if (request.header().get("Host").compare("") == 0)
+	{
+		request.header().set("Host", "192.168.1.1:8080");
+		cout << request.header().toString() << endl;
+	}
+
 	return httpResponse;
 }

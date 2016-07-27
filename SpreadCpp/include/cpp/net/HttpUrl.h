@@ -19,6 +19,7 @@ namespace cpp{
 			HttpUrl(string url);
 			
 			~HttpUrl(){ cout << "Relase HttpUrl Object" << endl; }
+
 			string scheme(void);
 			HttpUrl& scheme(string scheme);
 
@@ -47,8 +48,10 @@ namespace cpp{
 			list<string> encodedQuery(void);
 
 			string toString(void);
+
+			static HttpUrl parse(string url);
 		private:
-			const string pathEncodeSet = " \"<>^`{}|/\\?#";
+			string pathEncodeSet = " \"<>^`{}|/\\?#";
 
 			string _scheme = "http";
 			string _username;

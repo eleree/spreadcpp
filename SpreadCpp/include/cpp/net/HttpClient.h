@@ -11,6 +11,8 @@
 
 #include <cpp/net/HttpRequest.h>
 #include <cpp/net/HttpResponse.h>
+#include <cpp/net/HttpCallback.h>
+
 using namespace std;
 using namespace cpp::net;
 
@@ -34,6 +36,7 @@ namespace cpp{
 
 			HttpResponse execute(HttpRequest request);		
 
+			int32_t enqueue(HttpRequest request, shared_ptr<HttpCallback> callback);
 		private:
 			string _cacheDir;
 			uint32_t cacheSize;
@@ -41,6 +44,11 @@ namespace cpp{
 
 			HttpClient(const HttpClient &) = delete;
 			const HttpClient &operator =(const HttpClient &) = delete;
+
+			HttpRequest followUp(HttpResponse response);
+			HttpResponse retryAndFollowInterceptor(HttpRequest request);
+			HttpResponse BridgeInterceptor(HttpRequest request);
+			
 		};
 	}
 }
