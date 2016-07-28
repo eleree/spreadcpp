@@ -27,6 +27,7 @@ namespace cpp{
 			~Socket();
 			int32_t connect(void);
 			int32_t connect(string host, uint16_t port);
+			int32_t connect(string host, uint16_t port, uint32_t timeout);
 			int32_t send(char * sendBuf, uint32_t sendSize);
 			int32_t recv(char * recvBuf, uint32_t recvLen);
 			int32_t close();
@@ -38,11 +39,24 @@ namespace cpp{
 			bool isInputShutdown(void);
 			bool isOutputShutdown(void);
 
+			/* TCP Options*/
+			void setReuseAddress(bool on);
+			bool getReuseAddress(void);			
+			void setTcpNoDelay(bool on);
+			bool getTcpNoDelay(void);
+			void setKeepAlive(bool on);
+			bool getKeepAlive(void);
+			void setReceiveBufferSize(uint32_t size);
+			uint32_t getReceiveBufferSize(void);
+			void setSendBufferSize(uint32_t size);
+			uint32_t getSendBufferSize(void);
+
 			string toString(void);
 
 		private:
 			string _host;
 			uint16_t _port;
+			uint32_t _timeout;
 			bool _isClosed;
 			bool _isConnected;
 			bool _isInputShutdown;

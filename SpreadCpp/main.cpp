@@ -12,6 +12,7 @@
 #include <cpp/lang/String.h>
 #include <cpp/lang/UTF8CharsetEncoder.h>
 #include <cpp/net/HttpClient.h>
+#include <cpp/net/DNS.h>
 using namespace cpp::util;
 using namespace cpp::net;
 using namespace cpp::lang;
@@ -97,6 +98,10 @@ int main(int argc, char ** argv)
 		cout << httpClient.use_count() << endl;
 	}
 	*/
+
+	DNS dns("taobao.com", 80);
+	dns.resolve(50);
+	system("pause");
 	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
 
 	HttpRequest httpRequest;

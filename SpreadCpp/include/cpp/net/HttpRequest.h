@@ -65,6 +65,7 @@ namespace cpp{
 				string s;
 				s.append("GET / HTTP/1.1\r\n");
 				s.append(_httpHeader.toString());
+				s.append("\r\n");
 				return s;
 			}
 

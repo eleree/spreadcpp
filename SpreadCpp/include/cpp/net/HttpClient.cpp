@@ -77,7 +77,7 @@ HttpResponse HttpClient::BridgeInterceptor(HttpRequest request)
 
 	if (request.header().get("Host").compare("") == 0)
 	{
-		request.header().set("Host", "192.168.18.1");
+		request.header().set("Host", "192.168.1.1");
 	}
 
 	if (request.header().get("Connection").compare("") == 0)
@@ -110,12 +110,19 @@ HttpResponse HttpClient::CacheInterceptor(HttpRequest request)
 
 HttpResponse HttpClient::NetworkInterceptor(HttpRequest request)
 {
+	int32_t rc = 0;
 	HttpResponse httpResponse;
 	Socket clientSocket;
-	clientSocket.connect("192.168.18.106", 80);
+	clientSocket.connect("192.168.1.1", 80, 10000);
 	cout << "Start Connecting Socket" << endl;
 	string httpHeader = request.toHttpString();
-	cout << clientSocket.send((char *)httpHeader.c_str(), httpHeader.size()) << endl;
+	rc = clientSocket.send((char *)httpHeader.c_str(), httpHeader.size());
+	if (rc<0)
+	{
+		httpResponse.status(HttpResponse::TIMEOUT);
+		return httpResponse;
+	}
+	cout << "Start Socket Receive" << endl;
 
 	#define DEFAULT_BUFLEN 512
 	int iResult;

@@ -4,7 +4,7 @@ using namespace cpp::net;
 
 bool Socket::_init = false;
 
-Socket::Socket()
+Socket::Socket() : _timeout(10000)
 {
 	_isOutputShutdown = false;
 	_isInputShutdown = false;
@@ -66,11 +66,95 @@ int32_t Socket::connect(string host, uint16_t port)
 {
 	_host = host;
 	_port = port;
-	return Socket::connect();
+	return Socket::connect(_host,_port,_timeout);
 }
+
+int32_t Socket::connect(string host, uint16_t port, uint32_t timeout)
+{
+	_host = host;
+	_port = port;
+	_timeout = timeout;
+	int32_t rc = -1;
+	struct addrinfo hints;
+	struct addrinfo *result = NULL;
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	if (_host.empty() || _port == 0)
+		return rc;
+	if (inet_addr(_host.c_str()) == INADDR_NONE)
+		return rc;
+
+	cout << "Start Connect" << endl;
+	//rc = getaddrinfo(_host.c_str(), to_string(_port).c_str(), &hints, &result);
+	_socket = socket(hints.ai_family, hints.ai_socktype, hints.ai_protocol);
+	if (_socket == INVALID_SOCKET)
+	{
+		cout << "Invalid Socket" << endl;
+		return -2;
+	}
+
+	SOCKADDR_IN addrSrv;
+	addrSrv.sin_addr.S_un.S_addr = inet_addr(_host.c_str());
+	addrSrv.sin_family = AF_INET;
+	addrSrv.sin_port = htons(_port);
+
+	// If iMode = 0, blocking is enabled; 
+	// If iMode != 0, non-blocking mode is enabled.
+	u_long iMode = 1;
+	ioctlsocket(_socket, FIONBIO, (u_long FAR*)&iMode);
+	rc = ::connect(_socket, (SOCKADDR*)&addrSrv, sizeof(SOCKADDR));
+	//rc = ::connect(_socket, result->ai_addr, (int)result->ai_addrlen);
+
+	if (rc != NO_ERROR)
+	{
+		cout << "Start Select" << endl;
+		struct timeval tm;
+		tm.tv_sec = _timeout/1000;
+		tm.tv_usec = _timeout%1000*1000;
+		int ret = -1;
+
+		fd_set set;
+		FD_ZERO(&set);
+		FD_SET(_socket, &set);
+		if (select(-1, NULL, &set, NULL, &tm) <= 0)
+		{
+			closesocket(_socket);
+			cout << "Invalid Socket" << endl;
+			_socket = INVALID_SOCKET;
+		}else{
+			int error = -1;
+			int optLen = sizeof(int);
+			getsockopt(_socket, SOL_SOCKET, SO_ERROR, (char*)&error, &optLen);
+			if (0 != error)
+			{
+				rc = -1;
+				closesocket(_socket);
+				cout << "Invalid Socket" << endl;
+				_socket = INVALID_SOCKET;
+			}else{
+				cout << "Socket Connected" << endl;
+				u_long iMode = 0;
+				ioctlsocket(_socket, FIONBIO, (u_long FAR*)&iMode);
+				rc = 0;
+			}			
+		}
+	}
+
+	if (result != NULL)
+		freeaddrinfo(result);
+
+	return rc;
+}
+
+
 
 int32_t Socket::send(char * sendBuf, uint32_t sendSize)
 {
+	if (_socket == INVALID_SOCKET)
+		return -1;
 	return ::send(_socket, sendBuf, sendSize, 0);
 }
 
@@ -105,3 +189,44 @@ int32_t Socket::shutdownOutput()
 	return shutdown(_socket, SD_SEND);
 #endif
 }
+
+
+void setReuseAddress(bool on)
+{
+
+}
+
+bool getReuseAddress(void)
+{
+	return true;
+}
+
+void setTcpNoDelay(bool on)
+{
+
+}
+
+bool getTcpNoDelay(void)
+{
+	return true;
+}
+
+void setKeepAlive(bool on)
+{
+
+}
+
+bool getKeepAlive(void)
+{
+	return true;
+
+}
+
+void setReceiveBufferSize(uint32_t size)
+{
+
+}
+
+uint32_t getReceiveBufferSize(void);
+void setSendBufferSize(uint32_t size);
+uint32_t getSendBufferSize(void);
