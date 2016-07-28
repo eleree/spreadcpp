@@ -1,7 +1,8 @@
+#include <cpp/lang/String.h>
 #include <cpp/net/HttpUrl.h>
 
 using namespace cpp::net;
-
+using namespace cpp::lang;
 
 HttpUrl::HttpUrl() :_scheme("http"), _username(""), _password("")
 {
@@ -77,10 +78,45 @@ string HttpUrl::toString(void)
 	return url;
 }
 
-
 HttpUrl HttpUrl::parse(string url)
 {
 	HttpUrl httpUrl;
-	httpUrl.scheme("http").host("www.qq.com");
+	cout << url << endl;
+
 	return std::move(httpUrl);
+}
+
+uint32_t HttpUrl::skipLeadingSpace(string s, uint32_t pos, uint32_t limit)
+{
+	for (uint32_t i = pos; i < limit; i++) {
+		switch (String::charAt(s,i)) {
+		case '\t':
+		case '\n':
+		case '\f':
+		case '\r':
+		case ' ':
+			continue;
+		default:
+			return i;
+		}
+	}
+	return limit;
+}
+
+
+uint32_t HttpUrl::skipTrailingSpace(string s, uint32_t pos, uint32_t limit)
+{
+	for (int i = limit - 1; i >= pos; i--) {
+		switch (String::charAt(s, i)) {
+		case '\t':
+		case '\n':
+		case '\f':
+		case '\r':
+		case ' ':
+			continue;
+		default:
+			return i + 1;
+		}
+	}
+	return pos;
 }

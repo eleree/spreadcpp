@@ -63,7 +63,10 @@ namespace cpp{
 			list<string> _pathList;
 			list<string> _queryList;
 
+			uint32_t skipLeadingSpace(string s, uint32_t pos, uint32_t limit);
+			uint32_t skipTrailingSpace(string s, uint32_t pos, uint32_t limit);
 		};
+
 	}
 }
 #endif

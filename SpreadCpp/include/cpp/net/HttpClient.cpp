@@ -113,7 +113,7 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request)
 	int32_t rc = 0;
 	HttpResponse httpResponse;
 	Socket clientSocket;
-	clientSocket.connect("192.168.1.1", 80, 10000);
+	clientSocket.connect("192.168.18.1", 80, 10000);
 	cout << "Start Connecting Socket" << endl;
 	string httpHeader = request.toHttpString();
 	rc = clientSocket.send((char *)httpHeader.c_str(), httpHeader.size());

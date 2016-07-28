@@ -160,6 +160,8 @@ int32_t Socket::send(char * sendBuf, uint32_t sendSize)
 
 int32_t Socket::recv(char * recvBuf, uint32_t recvLen)
 {
+	if (_socket == INVALID_SOCKET)
+		return -1;
 	return ::recv(_socket, recvBuf, recvLen, 0);
 }
 

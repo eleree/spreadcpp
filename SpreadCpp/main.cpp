@@ -98,6 +98,8 @@ int main(int argc, char ** argv)
 		cout << httpClient.use_count() << endl;
 	}
 	*/
+
+
 	list<string> ipv4Address = DNS::Instance("baidu.com", 80)->getIPv4Address();
 	cout << ipv4Address.size() << endl;
 	for (auto && a : ipv4Address)
@@ -112,6 +114,7 @@ int main(int argc, char ** argv)
 	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
 
 	HttpRequest httpRequest;
+	httpRequest.url("192.168.1.1");
 	HttpResponse httpResponse  = httpClient->execute(httpRequest);
 	if (httpResponse.isSuccess())
 	{

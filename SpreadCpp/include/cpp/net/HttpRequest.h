@@ -39,6 +39,12 @@ namespace cpp{
 				return _httpUrl;
 			};
 
+			HttpRequest& url(string url)
+			{
+				_httpUrl = HttpUrl::parse(url);
+				return *this;
+			}
+
 			bool needFollow(void)
 			{
 				return _follow;

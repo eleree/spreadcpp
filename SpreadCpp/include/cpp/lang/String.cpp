@@ -12,3 +12,33 @@ string String::convert(string s, Charset from, Charset to)
 		return utf8Encoder.encode(s);
 	return "";
 }
+
+
+string String::substring(string& thisString, uint32_t beginIndex)
+{
+	if (thisString.length() <= beginIndex)
+		return "";
+	return thisString.substr(beginIndex);
+}
+
+string String::substring(string& thisString, uint32_t beginIndex, uint32_t endIndex)
+{
+	return thisString.substr(beginIndex, endIndex);
+}
+
+bool String::regionMatches(string& thisString, uint32_t toffset, string& otherString, uint32_t ooffset, uint32_t len)
+{
+	if (thisString.length() < (toffset + len) || otherString.length() < (ooffset + len))
+		return false;
+
+	if (thisString.substr(toffset, len).compare(otherString.substr(ooffset, len)) == 0)
+		return true;
+	else
+		return false;
+
+}
+
+char String::charAt(string thisString, uint32_t index)
+{
+	return thisString.at(index);
+}
