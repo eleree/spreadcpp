@@ -98,10 +98,17 @@ int main(int argc, char ** argv)
 		cout << httpClient.use_count() << endl;
 	}
 	*/
+	list<string> ipv4Address = DNS::Instance("baidu.com", 80)->getIPv4Address();
+	cout << ipv4Address.size() << endl;
+	for (auto && a : ipv4Address)
+		cout << a << endl;
 
+	/*
 	DNS dns("taobao.com", 80);
 	dns.resolve(50);
+	*/
 	system("pause");
+
 	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
 
 	HttpRequest httpRequest;

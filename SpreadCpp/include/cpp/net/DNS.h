@@ -4,6 +4,7 @@
 #include <list>
 #include <string>
 #include <stdint.h>
+#include <memory>
 #if defined(_WIN32) ||  defined(_WIN64)
 #include <winsock2.h>
 #include <windows.h>
@@ -19,6 +20,11 @@ namespace cpp{
 	namespace net{
 		class DNS{
 		public:
+			static shared_ptr<DNS>  Instance(string host, uint16_t port)
+			{
+				return make_shared<DNS>(host,port);
+			}
+
 			DNS(string host, uint16_t port) :_host(host), _port(port), _isResolved(false)
 			{
 
@@ -58,22 +64,24 @@ namespace cpp{
 					WSACleanup();
 					return 1;
 				}
+				_isResolved = true;
+
 				// Retrieve each address and print out the hex bytes
 				for (ptr = result; ptr != NULL; ptr = ptr->ai_next) 
 				{
-
-					printf("getaddrinfo response %d\n", i++);
-					printf("\tFlags: 0x%x\n", ptr->ai_flags);
-					printf("\tFamily: ");
+					//printf("getaddrinfo response %d\n", i++);
+					//printf("\tFlags: 0x%x\n", ptr->ai_flags);
+					//printf("\tFamily: ");
 					switch (ptr->ai_family) {
 					case AF_UNSPEC:
 						printf("Unspecified\n");
 						break;
 					case AF_INET:
-						printf("AF_INET (IPv4)\n");
+						//printf("AF_INET (IPv4)\n");
 						sockaddr_ipv4 = (struct sockaddr_in *) ptr->ai_addr;
-						printf("\tIPv4 address %s\n",
-							inet_ntoa(sockaddr_ipv4->sin_addr));
+						//printf("\tIPv4 address %s\n",
+						//	inet_ntoa(sockaddr_ipv4->sin_addr));
+						_ipv4Address.push_back(string(inet_ntoa(sockaddr_ipv4->sin_addr)));
 						break;
 					case AF_INET6:
 						printf("AF_INET6 (IPv6)\n");
@@ -92,7 +100,10 @@ namespace cpp{
 						if (iRetval)
 							printf("WSAAddressToString failed with %u\n", WSAGetLastError());
 						else
+						{							
 							printf("\tIPv6 address %s\n", ipstringbuffer);
+							_ipv6Address.push_back(string(ipstringbuffer));
+						}
 						break;
 					case AF_NETBIOS:
 						printf("AF_NETBIOS (NetBIOS)\n");
@@ -101,6 +112,8 @@ namespace cpp{
 						printf("Other %ld\n", ptr->ai_family);
 						break;
 					}
+					// Not Show :D
+					continue;
 					printf("\tSocket type: ");
 					switch (ptr->ai_socktype) {
 					case 0:
@@ -148,6 +161,8 @@ namespace cpp{
 
 			list<string> getIPv4Address(void)
 			{
+				if (_isResolved == false)
+					DNS::resolve(5000);
 				return _ipv4Address;
 			}
 
