@@ -69,6 +69,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\SpreadCpp\include\cpp\lang\GB2312CharsetDecoder.cpp" />
+    <ClCompile Include="..\SpreadCpp\include\cpp\lang\String.cpp" />
+    <ClCompile Include="..\SpreadCpp\include\cpp\lang\UTF8CharsetEncoder.cpp" />
     <ClCompile Include="..\SpreadCpp\include\cpp\net\Socket.cpp" />
     <ClCompile Include="..\SpreadCpp\include\cpp\util\Base64.cpp" />
     <ClCompile Include="unit\Base64Test.cpp" />
@@ -76,6 +79,7 @@
     <ClCompile Include="unit\HttpUrlTest.cpp" />
     <ClCompile Include="unit\LinkedListTest.cpp" />
     <ClCompile Include="unit\SocketTest.cpp" />
+    <ClCompile Include="unit\StringTest.cpp" />
     <ClCompile Include="unit\ThreadTest.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +87,7 @@
     <ClInclude Include="unit\HttpUrlTest.h" />
     <ClInclude Include="unit\LinkedListTest.h" />
     <ClInclude Include="unit\SocketTest.h" />
+    <ClInclude Include="unit\StringTest.h" />
     <ClInclude Include="unit\ThreadTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

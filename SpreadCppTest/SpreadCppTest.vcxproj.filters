@@ -39,6 +39,18 @@
     <ClCompile Include="unit\HttpUrlTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="unit\StringTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpreadCpp\include\cpp\lang\String.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpreadCpp\include\cpp\lang\GB2312CharsetDecoder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpreadCpp\include\cpp\lang\UTF8CharsetEncoder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="unit\LinkedListTest.h">
@@ -54,6 +66,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="unit\HttpUrlTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="unit\StringTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
