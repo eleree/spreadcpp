@@ -21,5 +21,5 @@ public:
 	void testThread();
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(ThreadTest);
+//CPPUNIT_TEST_SUITE_REGISTRATION(ThreadTest);
 

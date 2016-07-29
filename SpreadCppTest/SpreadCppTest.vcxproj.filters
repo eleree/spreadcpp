@@ -51,6 +51,9 @@
     <ClCompile Include="..\SpreadCpp\include\cpp\lang\UTF8CharsetEncoder.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\SpreadCpp\include\cpp\net\HttpUrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="unit\LinkedListTest.h">

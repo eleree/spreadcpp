@@ -72,6 +72,7 @@
     <ClCompile Include="..\SpreadCpp\include\cpp\lang\GB2312CharsetDecoder.cpp" />
     <ClCompile Include="..\SpreadCpp\include\cpp\lang\String.cpp" />
     <ClCompile Include="..\SpreadCpp\include\cpp\lang\UTF8CharsetEncoder.cpp" />
+    <ClCompile Include="..\SpreadCpp\include\cpp\net\HttpUrl.cpp" />
     <ClCompile Include="..\SpreadCpp\include\cpp\net\Socket.cpp" />
     <ClCompile Include="..\SpreadCpp\include\cpp\util\Base64.cpp" />
     <ClCompile Include="unit\Base64Test.cpp" />

@@ -35,11 +35,27 @@ namespace cpp{
 			uint16_t port();
 			HttpUrl& port(uint16_t port);
 
-			string fragment(void);
-			HttpUrl& addFragment(string fragment);
+			string fragment(void)
+			{
+				return _fragment;
+			}
 
-			list<string> path(void);
-			int32_t addPath(string path);
+			HttpUrl& fragment(string fragment)
+			{
+				_fragment = fragment;
+				return *this;
+			}
+
+			list<string> path(void)
+			{
+				return _pathList;
+			}
+
+			int32_t addPath(string path)
+			{
+				_pathList.push_back(path);
+				return 0;
+			}
 
 			list<string> query(void);
 			HttpUrl& addQuery(string name, string value);
@@ -58,13 +74,15 @@ namespace cpp{
 			string _password;
 			string _host;
 			uint16_t _port;
-			uint16_t _fragment;
+			string _fragment;
 
 			list<string> _pathList;
 			list<string> _queryList;
 
-			uint32_t skipLeadingSpace(string s, uint32_t pos, uint32_t limit);
-			uint32_t skipTrailingSpace(string s, uint32_t pos, uint32_t limit);
+			static uint32_t skipLeadingSpace(string s, uint32_t pos, uint32_t limit);
+			static uint32_t skipTrailingSpace(string s, uint32_t pos, uint32_t limit);
+			static int32_t delimiterOffset(string input, int32_t pos, int32_t limit, string delimiters);
+
 		};
 
 	}

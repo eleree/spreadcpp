@@ -81,7 +81,81 @@ string HttpUrl::toString(void)
 HttpUrl HttpUrl::parse(string url)
 {
 	HttpUrl httpUrl;
-	cout << url << endl;
+	uint32_t startPos = HttpUrl::skipLeadingSpace(url, 0, url.length());
+	uint32_t limitPos = HttpUrl::skipTrailingSpace(url, startPos, url.length());
+	
+	if (String::regionMatches(url, startPos, string("http:"), 0, 5) == true)
+		httpUrl.scheme("http");
+	else if (String::regionMatches(url, startPos, string("https:"), 0, 6) == true)
+		httpUrl.scheme("https");
+
+	/* host */
+	url = String::substring(url, startPos, limitPos);
+	cout << "Host:" + url << endl;
+	int32_t hostEnd = String::indexOf(url, '/', httpUrl.scheme().size() + 3);
+	int32_t hostStart = String::indexOf(url, '/', httpUrl.scheme().size() + 2) + 1;
+	if (hostEnd < 0)
+		httpUrl.host(String::substring(url,hostStart));
+	else
+		httpUrl.host(String::substring(url,hostStart,hostEnd));
+	
+	/* path */
+	url = String::substring(url, hostEnd);
+	cout << "Path:" + url << endl;
+	uint32_t slashIndex = 0;
+	for (;;)
+	{
+		int32_t firstSlash = String::indexOf(url, '/', slashIndex);
+		int32_t secondSlash = String::indexOf(url, '/', slashIndex+1);
+		if (secondSlash < 0)
+		{
+			int32_t endPath = HttpUrl::delimiterOffset(url, firstSlash, url.size() - firstSlash, "#?");
+			if (endPath < 0)
+			{
+				cout << String::substring(url, firstSlash + 1) << endl;
+				httpUrl.addPath(String::substring(url, firstSlash + 1));
+				return httpUrl;
+			}else{
+				cout << String::substring(url, firstSlash + 1, endPath) << endl;
+				httpUrl.addPath(String::substring(url, firstSlash + 1, endPath));
+				url = String::substring(url, endPath);
+			}
+			break;
+		}
+		cout << String::substring(url, firstSlash + 1, secondSlash) << endl;
+		httpUrl.addPath(String::substring(url, firstSlash + 1, secondSlash));
+		slashIndex = secondSlash;
+	}
+	
+	/* query */
+	cout << "Query:" << url << endl;
+	int32_t andTokenIndex = 0;
+	int32_t queryStart = 1;
+	int32_t numberSignIndex = 0;
+	for (;;)
+	{
+		andTokenIndex = String::indexOf(url, '&', queryStart);
+		if (andTokenIndex < 0)
+		{
+			numberSignIndex = HttpUrl::delimiterOffset(url, queryStart, url.size() - queryStart, "#");
+			if (numberSignIndex < 0)
+			{
+				cout << String::substring(url, queryStart) << endl;
+			}
+			else
+			{
+				cout << String::substring(url, queryStart, numberSignIndex) << endl;
+				url = String::substring(url, numberSignIndex);
+			}
+			break;
+		}
+		cout << String::substring(url, queryStart, andTokenIndex) << endl;
+		queryStart = andTokenIndex + 1;
+	}
+
+	// fragment
+	cout << "Fragment:" + url << endl;
+	httpUrl.fragment(String::substring(url, 1));
 
 	return std::move(httpUrl);
 }
@@ -106,7 +180,7 @@ uint32_t HttpUrl::skipLeadingSpace(string s, uint32_t pos, uint32_t limit)
 
 uint32_t HttpUrl::skipTrailingSpace(string s, uint32_t pos, uint32_t limit)
 {
-	for (int i = limit - 1; i >= pos; i--) {
+	for (uint32_t i = limit - 1; i >= pos; i--) {
 		switch (String::charAt(s, i)) {
 		case '\t':
 		case '\n':
@@ -119,4 +193,12 @@ uint32_t HttpUrl::skipTrailingSpace(string s, uint32_t pos, uint32_t limit)
 		}
 	}
 	return pos;
+}
+
+int32_t HttpUrl::delimiterOffset(string input, int32_t pos, int32_t limit, string delimiters)
+{
+	for (int i = pos; i < limit; i++) {
+		if (String::indexOf(delimiters, String::charAt(input,i)) != -1) return i;
+	}
+	return limit;
 }

@@ -55,6 +55,21 @@ private:
 
 int main(int argc, char ** argv)
 {
+
+	string x = "http://android.ccom \t\f\n";
+	string y = x.substr(0, 23);
+
+	{
+		HttpUrl httpUrl = HttpUrl::parse("   http://weibo.com/hello/home?wvr=5&topnav=1&mod=logo#getBytes(java.nio.charset.Charset)");
+		//string a = "ABCD";
+		//cout << String::indexOf(a, 'B',2) << endl;
+		cout << "Scheme:" + httpUrl.scheme() << endl;
+		cout << "Host:" + httpUrl.host() << endl;
+		for (auto && path : httpUrl.path())
+			cout << "/" + path << endl;
+	}
+	system("pause");
+	exit(0);
 	//Timer timer;
 	//TestInnerTimerTask *testInnerTimerTask = new TestInnerTimerTask();
 	//TestTimerTask *testTimerTask = new TestTimerTask();

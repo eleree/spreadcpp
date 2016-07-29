@@ -23,7 +23,9 @@ string String::substring(string& thisString, uint32_t beginIndex)
 
 string String::substring(string& thisString, uint32_t beginIndex, uint32_t endIndex)
 {
-	return thisString.substr(beginIndex, endIndex);
+	if (thisString.length() <= beginIndex)
+		return thisString.substr(beginIndex);
+	return thisString.substr(beginIndex, endIndex-beginIndex);
 }
 
 bool String::regionMatches(string& thisString, uint32_t toffset, string& otherString, uint32_t ooffset, uint32_t len)
@@ -41,4 +43,14 @@ bool String::regionMatches(string& thisString, uint32_t toffset, string& otherSt
 char String::charAt(string thisString, uint32_t index)
 {
 	return thisString.at(index);
+}
+
+int32_t String::indexOf(string thisString, const char c)
+{
+	return thisString.find(c);
+}
+
+int32_t String::indexOf(string thisString, const char c, int32_t fromIndex)
+{
+	return thisString.find(c,fromIndex);
 }
