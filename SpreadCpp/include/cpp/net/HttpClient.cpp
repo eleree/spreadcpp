@@ -125,12 +125,16 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request)
 	cout << "Start Socket Receive" << endl;
 
 	#define DEFAULT_BUFLEN 512
-	int iResult;
+	int iResult = 1;
 	char recvbuf[DEFAULT_BUFLEN];
 	int recvbuflen = DEFAULT_BUFLEN;
 	memset(recvbuf, 0, DEFAULT_BUFLEN);
 	do {
-
+		string rawResponse = clientSocket.readline();
+		if (rawResponse.empty())
+			break;
+		cout << rawResponse << endl;
+		continue;
 		iResult = clientSocket.recv(recvbuf, recvbuflen);
 		if (iResult > 0)
 			printf("Bytes received: %d,%s\n", iResult, recvbuf);

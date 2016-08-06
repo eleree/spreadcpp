@@ -55,7 +55,7 @@ private:
 
 int main(int argc, char ** argv)
 {
-
+	/*
 	string x = "http://android.ccom \t\f\n";
 	string y = x.substr(0, 23);
 
@@ -70,6 +70,7 @@ int main(int argc, char ** argv)
 	}
 	system("pause");
 	exit(0);
+	*/
 	//Timer timer;
 	//TestInnerTimerTask *testInnerTimerTask = new TestInnerTimerTask();
 	//TestTimerTask *testTimerTask = new TestTimerTask();
@@ -114,22 +115,10 @@ int main(int argc, char ** argv)
 	}
 	*/
 
-
-	list<string> ipv4Address = DNS::Instance("baidu.com", 80)->getIPv4Address();
-	cout << ipv4Address.size() << endl;
-	for (auto && a : ipv4Address)
-		cout << a << endl;
-
-	/*
-	DNS dns("taobao.com", 80);
-	dns.resolve(50);
-	*/
-	system("pause");
-
 	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
 
 	HttpRequest httpRequest;
-	httpRequest.url("192.168.1.1");
+	httpRequest.url("http://192.168.18.1/");
 	HttpResponse httpResponse  = httpClient->execute(httpRequest);
 	if (httpResponse.isSuccess())
 	{

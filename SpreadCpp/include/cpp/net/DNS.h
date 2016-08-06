@@ -14,7 +14,6 @@
 #endif
 
 using namespace std;
-using namespace cpp::net;
 
 namespace cpp{
 	namespace net{

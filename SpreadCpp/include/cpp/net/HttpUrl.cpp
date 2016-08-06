@@ -94,8 +94,12 @@ HttpUrl HttpUrl::parse(string url)
 	cout << "Host:" + url << endl;
 	int32_t hostEnd = String::indexOf(url, '/', httpUrl.scheme().size() + 3);
 	int32_t hostStart = String::indexOf(url, '/', httpUrl.scheme().size() + 2) + 1;
+
 	if (hostEnd < 0)
-		httpUrl.host(String::substring(url,hostStart));
+	{
+		httpUrl.host(String::substring(url, hostStart));
+		return httpUrl;
+	}
 	else
 		httpUrl.host(String::substring(url,hostStart,hostEnd));
 	

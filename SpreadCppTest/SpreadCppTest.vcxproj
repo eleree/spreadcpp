@@ -76,6 +76,7 @@
     <ClCompile Include="..\SpreadCpp\include\cpp\net\Socket.cpp" />
     <ClCompile Include="..\SpreadCpp\include\cpp\util\Base64.cpp" />
     <ClCompile Include="unit\Base64Test.cpp" />
+    <ClCompile Include="unit\DNSTest.cpp" />
     <ClCompile Include="unit\HttpHeaderTest.cpp" />
     <ClCompile Include="unit\HttpUrlTest.cpp" />
     <ClCompile Include="unit\LinkedListTest.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="unit\ThreadTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="unit\DNSTest.h" />
     <ClInclude Include="unit\HttpHeaderTest.h" />
     <ClInclude Include="unit\HttpUrlTest.h" />
     <ClInclude Include="unit\LinkedListTest.h" />

@@ -54,6 +54,9 @@
     <ClCompile Include="..\SpreadCpp\include\cpp\net\HttpUrl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="unit\DNSTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="unit\LinkedListTest.h">
@@ -72,6 +75,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="unit\StringTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="unit\DNSTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

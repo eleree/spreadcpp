@@ -12,7 +12,7 @@ void HttpUrlTest::testUrl()
 	CPPUNIT_ASSERT_EQUAL(HttpUrl::parse(" \t\fhttp://127.0.0.1/    ").host().compare("127.0.0.1"), 0);
 	CPPUNIT_ASSERT_EQUAL(HttpUrl::parse("http://127.0.0.1/").host().compare("127.0.0.1"), 0);
 	CPPUNIT_ASSERT_EQUAL(HttpUrl::parse("  \t\f\nhttp://android.com").host().compare("android.com"), 0);
-	CPPUNIT_ASSERT_EQUAL(HttpUrl::parse(" http://android.com \t\f\n").host().compare("android.com"), 0);
+	CPPUNIT_ASSERT_EQUAL(HttpUrl::parse(" http://android.com/ \t\f\n").host().compare("android.com"), 0);
 	CPPUNIT_ASSERT_EQUAL(HttpUrl::parse("http://android.com \t\f\n").host().compare("android.com"), 0);
 	CPPUNIT_ASSERT_EQUAL(HttpUrl::parse("http://android.com/login.html \t\f\n").host().compare("android.com"), 0);
 

@@ -165,6 +165,32 @@ int32_t Socket::recv(char * recvBuf, uint32_t recvLen)
 	return ::recv(_socket, recvBuf, recvLen, 0);
 }
 
+string Socket::readline(void)
+{
+	int rc = 0;
+	string line;
+
+	if (_socket == INVALID_SOCKET)
+		return "";
+
+	for (;;)
+	{
+		char c;
+		rc = ::recv(_socket, &c, 1, 0);
+		if (rc <= 0)
+			return line;
+		if (c == '\r')
+			continue;
+		else if (c == '\n')
+		{
+			return line;
+		}else{
+			line += c;
+		}
+	}
+}
+
+
 int32_t Socket::close()
 {
 	_isOutputShutdown = true;
