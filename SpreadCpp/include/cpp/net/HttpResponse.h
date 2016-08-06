@@ -25,7 +25,7 @@ namespace cpp{
 				return _responseBody;
 			}
 
-			HttpHeader head(void){
+			HttpHeader& header(void){
 				return _httpHeader;
 			}
 
@@ -35,16 +35,22 @@ namespace cpp{
 
 			void status(int32_t status)
 			{
-				_status = status;
+				_httpStatus = status;
 			}
 
 			int32_t status(void)
 			{
-				return _status;
+				return _httpStatus;
+			}
+
+			string toString(void)
+			{
+				return _httpHeader.toString();
 			}
 
 		private:
-			int32_t _status;
+			int32_t _httpVersion;
+			int32_t _httpStatus;
 			HttpHeader _httpHeader;
 			HttpResponseBody _responseBody;
 			bool _success;

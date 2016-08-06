@@ -1,7 +1,9 @@
+#include <cpp/lang/String.h>
 #include <cpp/net/HttpClient.h>
 
 using namespace std;
 using namespace cpp::net;
+using namespace cpp::lang;
 
 weak_ptr<HttpClient> HttpClient::_httpClient;
 
@@ -133,6 +135,15 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request)
 		string rawResponse = clientSocket.readline();
 		if (rawResponse.empty())
 			break;
+		string HTTP11 = "HTTP/1.1";
+		if (String::regionMatches(rawResponse, 0, HTTP11, 0, 8) == true)
+		{
+			httpResponse.status(std::stoi(String::substring(rawResponse,8), nullptr, 10));
+		}
+		int32_t equalToken = String::indexOf(rawResponse, ':');
+		if (equalToken > 0)
+			httpResponse.header().set(String::substring(rawResponse, 0, equalToken), \
+									String::substring(rawResponse,equalToken+1));
 		cout << rawResponse << endl;
 		continue;
 		iResult = clientSocket.recv(recvbuf, recvbuflen);
@@ -145,5 +156,7 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request)
 
 	} while (iResult > 0);
 	httpResponse.setSuccessStatus(true);
+	cout << "Http Status: " << httpResponse.status() << endl;
+	cout << httpResponse.toString() << endl;
 	return httpResponse;
 }
