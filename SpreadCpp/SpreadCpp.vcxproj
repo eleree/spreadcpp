@@ -75,6 +75,8 @@
     <ClInclude Include="include\cpp\net\DNS.h" />
     <ClInclude Include="include\cpp\net\HttpCallback.h" />
     <ClInclude Include="include\cpp\net\HttpClient.h" />
+    <ClInclude Include="include\cpp\net\HttpConnection.h" />
+    <ClInclude Include="include\cpp\net\HttpConnectionPool.h" />
     <ClInclude Include="include\cpp\net\HttpHeader.h" />
     <ClInclude Include="include\cpp\net\HttpRequest.h" />
     <ClInclude Include="include\cpp\net\HttpRequestBody.h" />
@@ -83,6 +85,7 @@
     <ClInclude Include="include\cpp\net\HttpUrl.h" />
     <ClInclude Include="include\cpp\net\Socket.h" />
     <ClInclude Include="include\cpp\net\SocketFactory.h" />
+    <ClInclude Include="include\cpp\net\SSLSocket.h" />
     <ClInclude Include="include\cpp\util\ArrayList.h" />
     <ClInclude Include="include\cpp\util\Base64.h" />
     <ClInclude Include="include\cpp\util\BlockingQueue.h" />
@@ -97,8 +100,11 @@
     <ClCompile Include="include\cpp\lang\String.cpp" />
     <ClCompile Include="include\cpp\lang\UTF8CharsetEncoder.cpp" />
     <ClCompile Include="include\cpp\net\HttpClient.cpp" />
+    <ClCompile Include="include\cpp\net\HttpConnection.cpp" />
+    <ClCompile Include="include\cpp\net\HttpConnectionPool.cpp" />
     <ClCompile Include="include\cpp\net\HttpUrl.cpp" />
     <ClCompile Include="include\cpp\net\Socket.cpp" />
+    <ClCompile Include="include\cpp\net\SSLSocket.cpp" />
     <ClCompile Include="include\cpp\util\Base64.cpp" />
     <ClCompile Include="include\cpp\util\LinkedList.h" />
     <ClCompile Include="main.cpp" />

@@ -13,7 +13,8 @@
 #include <cpp/net/HttpRequest.h>
 #include <cpp/net/HttpResponse.h>
 #include <cpp/net/HttpCallback.h>
-
+#include <cpp/net/HttpConnection.h>
+#include <cpp/net/HttpConnectionPool.h>
 using namespace std;
 using namespace cpp::net;
 
@@ -46,11 +47,15 @@ namespace cpp{
 			HttpClient(const HttpClient &) = delete;
 			const HttpClient &operator =(const HttpClient &) = delete;
 
+			HttpConnectionPool _connectionPool;
+
 			HttpRequest followUp(HttpResponse response);
 			HttpResponse retryAndFollowInterceptor(HttpRequest request);
 			HttpResponse BridgeInterceptor(HttpRequest request);
 			HttpResponse CacheInterceptor(HttpRequest request);
-			HttpResponse NetworkInterceptor(HttpRequest request);
+			HttpResponse ConnectionInterceptor(HttpRequest request);
+			HttpResponse NetworkInterceptor(HttpRequest request, shared_ptr<HttpConnection> connection);
+
 
 		};
 	}

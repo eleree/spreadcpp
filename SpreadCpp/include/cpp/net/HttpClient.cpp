@@ -99,18 +99,29 @@ HttpResponse HttpClient::BridgeInterceptor(HttpRequest request)
 
 	cout << request.header().toString() << endl;
 	HttpResponse httpResponse = CacheInterceptor(request);
-
+	
 	return httpResponse;
 }
 
 HttpResponse HttpClient::CacheInterceptor(HttpRequest request)
 {
-	HttpResponse httpResponse = NetworkInterceptor(request);
+	HttpResponse httpResponse = ConnectionInterceptor(request);
 	return httpResponse;
 
 }
+HttpResponse HttpClient::ConnectionInterceptor(HttpRequest request)
+{
+	HttpResponse httpResponse;
+	shared_ptr<HttpConnection> connection = _connectionPool.findIdleConnection(request.url().host());
+	if (connection == nullptr)
+		return httpResponse;
 
-HttpResponse HttpClient::NetworkInterceptor(HttpRequest request)
+	// Find a idle connection, if no idle connection found, new one;
+	httpResponse = NetworkInterceptor(request, nullptr);
+	return httpResponse;
+}
+
+HttpResponse HttpClient::NetworkInterceptor(HttpRequest request, shared_ptr<HttpConnection> connection)
 {
 	int32_t rc = 0;
 	HttpResponse httpResponse;
