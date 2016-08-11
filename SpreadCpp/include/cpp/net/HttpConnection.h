@@ -21,11 +21,15 @@ namespace cpp{
 		#define HTTP_CONNECTION_MAX_BUFFER_SIZE	512
 		public:
 			HttpConnection() {
+				_idle = true;
 				_buffer = std::make_unique<char[]>(HTTP_CONNECTION_MAX_BUFFER_SIZE);
 			}
 
 			~HttpConnection() {}
 
+			int32_t connectSocket(int32_t connectTimeout, int32_t readTimeout);
+			int32_t connectSSLScoket(int32_t connectTimeout, int32_t readTimeout);
+			bool idle(void);
 			int32_t available(void);
 			int32_t read(char * buf, int32_t len);
 			int32_t read(char * buf, int32_t len, int32_t offset);			
