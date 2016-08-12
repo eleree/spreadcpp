@@ -14,13 +14,18 @@ namespace cpp{
 			enum {
 				SUCCESS = 0,
 				TIMEOUT,
+				NO_VALID_CONNECTION,
 				ROUTE_FAIL,
 				CONNECT_FAIL,
 				FOLLOW_OVERFLOW,
 			};
 
-			bool isSuccess(void){ return _success; }
-			HttpResponseBody body(void)
+			bool isSuccess(void)
+			{ 
+				return _success; 
+			}
+
+			HttpResponseBody& body(void)
 			{
 				return _responseBody;
 			}
@@ -33,14 +38,24 @@ namespace cpp{
 				_success = isSuccess;
 			}
 
-			void status(int32_t status)
+			int32_t httpStatus()
+			{
+				return _httpStatus;
+			}
+
+			void httpStatus(int32_t status)
 			{
 				_httpStatus = status;
 			}
 
 			int32_t status(void)
 			{
-				return _httpStatus;
+				return _status;
+			}
+
+			void status(int32_t status)
+			{
+				_status = status;
 			}
 
 			string toString(void)
@@ -49,7 +64,8 @@ namespace cpp{
 			}
 
 		private:
-			int32_t _httpVersion;
+			int32_t _status; // Response Self Status
+			int32_t _httpVersion; // Normal Http Response Status
 			int32_t _httpStatus;
 			HttpHeader _httpHeader;
 			HttpResponseBody _responseBody;

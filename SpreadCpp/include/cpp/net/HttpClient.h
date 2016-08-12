@@ -15,6 +15,8 @@
 #include <cpp/net/HttpCallback.h>
 #include <cpp/net/HttpConnection.h>
 #include <cpp/net/HttpConnectionPool.h>
+#include <cpp/net/HttpRouteDatabase.h>
+
 using namespace std;
 using namespace cpp::net;
 
@@ -25,6 +27,7 @@ namespace cpp{
 			struct ctor_cookie {};
 			explicit HttpClient(ctor_cookie) 
 			{
+				_connectionPool = make_shared<HttpConnectionPool>(5);
 				cout << "HttpClient Cookie" << endl; 
 			};
 			static shared_ptr<HttpClient> getInstance(void);
@@ -47,7 +50,8 @@ namespace cpp{
 			HttpClient(const HttpClient &) = delete;
 			const HttpClient &operator =(const HttpClient &) = delete;
 
-			HttpConnectionPool _connectionPool;
+			shared_ptr<HttpConnectionPool> _connectionPool;
+			HttpRouteDatabase _routeDatabase;
 
 			HttpRequest followUp(HttpResponse response);
 			HttpResponse retryAndFollowInterceptor(HttpRequest request);
@@ -55,7 +59,6 @@ namespace cpp{
 			HttpResponse CacheInterceptor(HttpRequest request);
 			HttpResponse ConnectionInterceptor(HttpRequest request);
 			HttpResponse NetworkInterceptor(HttpRequest request, shared_ptr<HttpConnection> connection);
-
 
 		};
 	}

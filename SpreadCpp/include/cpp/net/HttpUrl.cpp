@@ -58,6 +58,49 @@ HttpUrl& HttpUrl::host(string host)
 	return *this;
 }
 
+
+uint16_t HttpUrl::port()
+{
+	return _port;
+}
+
+HttpUrl& HttpUrl::port(uint16_t port)
+{
+	_port = port;
+	return *this;
+};
+
+string HttpUrl::fragment(void)
+{
+	return _fragment;
+}
+
+HttpUrl& HttpUrl::fragment(string fragment)
+{
+	_fragment = fragment;
+	return *this;
+}
+
+list<string> HttpUrl::path(void)
+{
+	return _pathList;
+}
+
+string HttpUrl::pathString(void)
+{
+	string s="/";
+	for (auto &p : _pathList)
+	{
+		s.append(p);		
+	}
+	return s;
+}
+
+int32_t HttpUrl::addPath(string path)
+{
+	_pathList.push_back(path);
+	return 0;
+}
 string HttpUrl::toString(void)
 {
 	string url;
@@ -85,9 +128,14 @@ HttpUrl HttpUrl::parse(string url)
 	uint32_t limitPos = HttpUrl::skipTrailingSpace(url, startPos, url.length());
 	
 	if (String::regionMatches(url, startPos, string("http:"), 0, 5) == true)
+	{
 		httpUrl.scheme("http");
-	else if (String::regionMatches(url, startPos, string("https:"), 0, 6) == true)
+		httpUrl.port(80);
+	}else if (String::regionMatches(url, startPos, string("https:"), 0, 6) == true)
+	{
 		httpUrl.scheme("https");
+		httpUrl.port(433);
+	}
 
 	/* host */
 	url = String::substring(url, startPos, limitPos);

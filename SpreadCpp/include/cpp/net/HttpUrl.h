@@ -35,27 +35,14 @@ namespace cpp{
 			uint16_t port();
 			HttpUrl& port(uint16_t port);
 
-			string fragment(void)
-			{
-				return _fragment;
-			}
+			string fragment(void);
 
-			HttpUrl& fragment(string fragment)
-			{
-				_fragment = fragment;
-				return *this;
-			}
+			HttpUrl& fragment(string fragment);
 
-			list<string> path(void)
-			{
-				return _pathList;
-			}
-
-			int32_t addPath(string path)
-			{
-				_pathList.push_back(path);
-				return 0;
-			}
+			string pathString(void);
+			list<string> path(void);
+		
+			int32_t addPath(string path);
 
 			list<string> query(void);
 			HttpUrl& addQuery(string name, string value);

@@ -117,8 +117,9 @@ int main(int argc, char ** argv)
 
 	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
 
-	HttpRequest httpRequest;
-	httpRequest.url("http://192.168.18.1/");
+	HttpRequest httpRequest;	
+	httpRequest.url("http://192.168.1.1/");
+	httpRequest.follow(true);
 	HttpResponse httpResponse  = httpClient->execute(httpRequest);
 	if (httpResponse.isSuccess())
 	{

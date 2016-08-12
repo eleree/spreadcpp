@@ -13,11 +13,12 @@ namespace cpp{
 		class HttpConnectionPool
 		{
 		public:
-			HttpConnectionPool();
+			HttpConnectionPool(){};
+			HttpConnectionPool(int32_t maxCount);
 			shared_ptr<HttpConnection> findIdleConnection(string host);
 
 		private:
-			int32_t _max;
+			int32_t _maxCount;
 			std::mutex _mutex;
 			vector<shared_ptr<HttpConnection>> _httpConnectionPool;
 		};

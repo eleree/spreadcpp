@@ -39,13 +39,13 @@ int32_t HttpClient::enqueue(HttpRequest request, shared_ptr<HttpCallback> callba
 HttpRequest HttpClient::followUp(HttpResponse response)
 {
 	HttpRequest httpRequest;
-	httpRequest.follow(false);
+	httpRequest.follow(true);
 	return httpRequest;
 }
 
 HttpResponse HttpClient::retryAndFollowInterceptor(HttpRequest request)
 {
-	uint32_t maxFollow = 20;
+	uint32_t maxFollow = 3;
 	HttpResponse httpResponse;
 	while (1)
 	{
@@ -57,17 +57,33 @@ HttpResponse HttpClient::retryAndFollowInterceptor(HttpRequest request)
 
 		}
 
-		HttpRequest followRequest = followUp(httpResponse);
-
-		if (!followRequest.needFollow())
-			return httpResponse;
-
-		if (--maxFollow)
+		if (httpResponse.status() == HttpResponse::SUCCESS)
 		{
-			httpResponse.status(HttpResponse::FOLLOW_OVERFLOW);
-			break;
-		}
+			if (httpResponse.httpStatus() == 200)
+			{
+				cout << "OK" << endl;
+				break;
+			}// Http Code 200
 
+			if (httpResponse.httpStatus() == 302)
+			{
+				cout << "Redirect: " << httpResponse.header().get("Location")  << endl;
+				request.url(httpResponse.header().get("Location"));
+			
+				if (!request.needFollow())
+					return httpResponse;
+
+				if (--maxFollow == 0)
+				{
+					httpResponse.status(HttpResponse::FOLLOW_OVERFLOW);
+					break;
+				}
+
+				continue;
+			}// Http Code 302
+
+		}
+		
 	}
 	
 	return httpResponse;
@@ -107,17 +123,33 @@ HttpResponse HttpClient::CacheInterceptor(HttpRequest request)
 {
 	HttpResponse httpResponse = ConnectionInterceptor(request);
 	return httpResponse;
-
 }
+
 HttpResponse HttpClient::ConnectionInterceptor(HttpRequest request)
 {
 	HttpResponse httpResponse;
-	shared_ptr<HttpConnection> connection = _connectionPool.findIdleConnection(request.url().host());
+	shared_ptr<HttpConnection> connection = _connectionPool->findIdleConnection(request.url().host());
 	if (connection == nullptr)
+	{
+		httpResponse.status(HttpResponse::NO_VALID_CONNECTION);
 		return httpResponse;
+	}
 
 	// Find a idle connection, if no idle connection found, new one;
-	httpResponse = NetworkInterceptor(request, nullptr);
+	httpResponse = NetworkInterceptor(request, connection);
+	
+	// if no Content-length return, release this connection
+	if (httpResponse.header().get("Content-length").compare("") != 0)
+	{		
+		int32_t contentLength = std::stoi(httpResponse.header().get("Content-length"), 0, 10);
+		cout << "Content-length:" << std::stoi(httpResponse.header().get("Content-length"), 0, 10) << endl;
+		httpResponse.body().init(0, contentLength, connection);
+	}else{
+		cout << "Release Connection" << endl;
+		connection->release();
+	}
+
+	// Connection Route Fail
 	return httpResponse;
 }
 
@@ -125,11 +157,16 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request, shared_ptr<Http
 {
 	int32_t rc = 0;
 	HttpResponse httpResponse;
-	Socket clientSocket;
-	clientSocket.connect("192.168.18.1", 80, 10000);
+	
+	connection->setAddress(request.url().host(),request.url().port());
+	connection->connectSocket(5000, 5000);
+
+	//Socket clientSocket;
+	//clientSocket.connect("192.168.18.1", 80, 10000);
 	cout << "Start Connecting Socket" << endl;
 	string httpHeader = request.toHttpString();
-	rc = clientSocket.send((char *)httpHeader.c_str(), httpHeader.size());
+	rc = connection->write((char *)httpHeader.c_str(), httpHeader.size());
+	//rc = clientSocket.send((char *)httpHeader.c_str(), httpHeader.size());
 	if (rc<0)
 	{
 		httpResponse.status(HttpResponse::TIMEOUT);
@@ -143,31 +180,26 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request, shared_ptr<Http
 	int recvbuflen = DEFAULT_BUFLEN;
 	memset(recvbuf, 0, DEFAULT_BUFLEN);
 	do {
-		string rawResponse = clientSocket.readline();
+		string rawResponse = connection->readline();
 		if (rawResponse.empty())
 			break;
 		string HTTP11 = "HTTP/1.1";
+		string HTTP10 = "HTTP/1.0";
 		if (String::regionMatches(rawResponse, 0, HTTP11, 0, 8) == true)
 		{
-			httpResponse.status(std::stoi(String::substring(rawResponse,8), nullptr, 10));
+			httpResponse.httpStatus(std::stoi(String::substring(rawResponse,8), nullptr, 10));
+		}else if(String::regionMatches(rawResponse, 0, HTTP10, 0, 8) == true){
+			httpResponse.httpStatus(std::stoi(String::substring(rawResponse, 8), nullptr, 10));
 		}
 		int32_t equalToken = String::indexOf(rawResponse, ':');
 		if (equalToken > 0)
 			httpResponse.header().set(String::substring(rawResponse, 0, equalToken), \
 									String::substring(rawResponse,equalToken+1));
 		cout << rawResponse << endl;
-		continue;
-		iResult = clientSocket.recv(recvbuf, recvbuflen);
-		if (iResult > 0)
-			printf("Bytes received: %d,%s\n", iResult, recvbuf);
-		else if (iResult == 0)
-			printf("Connection closed\n");
-		else
-			printf("recv failed with error: %d\n", WSAGetLastError());
-
 	} while (iResult > 0);
 	httpResponse.setSuccessStatus(true);
-	cout << "Http Status: " << httpResponse.status() << endl;
+	httpResponse.status(HttpResponse::SUCCESS);
+	cout << "Http Status: " << httpResponse.httpStatus() << endl;
 	cout << httpResponse.toString() << endl;
 	return httpResponse;
 }

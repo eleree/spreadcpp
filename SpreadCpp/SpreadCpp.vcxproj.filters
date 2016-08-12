@@ -96,6 +96,9 @@
     <ClInclude Include="include\cpp\net\HttpConnectionPool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\cpp\net\HttpRouteDatabase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\cpp\util\Base64.cpp">

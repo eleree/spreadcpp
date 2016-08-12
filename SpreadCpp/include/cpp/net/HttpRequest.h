@@ -21,11 +21,15 @@ namespace cpp{
 		class HttpRequest
 		{
 		public:
-			HttpRequest(){};
+			HttpRequest()
+			{
+				_follow = true;
+			};
+
 			~HttpRequest(){};
 
 			HttpRequest(string url)
-			{				
+			{							
 				_httpUrl = HttpUrl::parse(url);
 			}
 
@@ -69,7 +73,9 @@ namespace cpp{
 			string toHttpString(void)
 			{
 				string s;
-				s.append("GET / HTTP/1.1\r\n");
+				s.append("GET ");
+				s.append(_httpUrl.pathString());
+				s.append(" HTTP/1.1\r\n");
 				s.append(_httpHeader.toString());
 				s.append("\r\n");
 				return s;
