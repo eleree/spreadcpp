@@ -59,13 +59,13 @@ HttpResponse HttpClient::retryAndFollowInterceptor(HttpRequest request)
 
 		if (httpResponse.status() == HttpResponse::SUCCESS)
 		{
-			if (httpResponse.httpStatus() == 200)
+			if (httpResponse.httpStatus() == HttpStatus::HTTP_OK)
 			{
 				cout << "OK" << endl;
 				break;
 			}// Http Code 200
 
-			if (httpResponse.httpStatus() == 302)
+			if (httpResponse.httpStatus() == HttpStatus::HTTP_MOVED_TEMP)
 			{
 				cout << "Redirect: " << httpResponse.header().get("Location")  << endl;
 				request.url(httpResponse.header().get("Location"));
@@ -143,10 +143,12 @@ HttpResponse HttpClient::ConnectionInterceptor(HttpRequest request)
 	{		
 		int32_t contentLength = std::stoi(httpResponse.header().get("Content-length"), 0, 10);
 		cout << "Content-length:" << std::stoi(httpResponse.header().get("Content-length"), 0, 10) << endl;
-		httpResponse.body().init(0, contentLength, connection);
+		//httpResponse.body().init(0, contentLength, connection);
+		httpResponse.body(make_shared<HttpResponseBody>(0, contentLength, HttpResponseBody::RESPONSE_BODY_FIX_LENGTH ,connection));
 	}else{
-		cout << "Release Connection" << endl;
-		connection->release();
+		cout << "Unknown Connection" << endl;
+		httpResponse.body(make_shared<HttpResponseBody>(0, 0, HttpResponseBody::RESPONSE_BODY_UNKNOWN, connection));
+		//connection->release();
 	}
 
 	// Connection Route Fail

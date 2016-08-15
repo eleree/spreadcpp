@@ -1,9 +1,10 @@
 #ifndef _CPP_NET_HTTP_RESPONSE_H_
 #define _CPP_NET_HTTP_RESPONSE_H_
 
-
+#include <memory>
 #include <iostream>
 #include <cpp/net/HttpHeader.h>
+#include <cpp/net/HttpStatus.h>
 #include <cpp/net/HttpResponseBody.h>
 using namespace cpp::net;
 
@@ -19,15 +20,20 @@ namespace cpp{
 				CONNECT_FAIL,
 				FOLLOW_OVERFLOW,
 			};
-
+			
 			bool isSuccess(void)
 			{ 
 				return _success; 
 			}
 
-			HttpResponseBody& body(void)
+			shared_ptr<HttpResponseBody> body(void)
 			{
 				return _responseBody;
+			}
+
+			void body(shared_ptr<HttpResponseBody> responseBody)
+			{
+				_responseBody = responseBody;
 			}
 
 			HttpHeader& header(void){
@@ -68,7 +74,8 @@ namespace cpp{
 			int32_t _httpVersion; // Normal Http Response Status
 			int32_t _httpStatus;
 			HttpHeader _httpHeader;
-			HttpResponseBody _responseBody;
+			//HttpResponseBody _responseBody;
+			shared_ptr<HttpResponseBody> _responseBody;
 			bool _success;
 		};
 	}

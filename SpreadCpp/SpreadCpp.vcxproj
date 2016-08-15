@@ -83,6 +83,7 @@
     <ClInclude Include="include\cpp\net\HttpResponse.h" />
     <ClInclude Include="include\cpp\net\HttpResponseBody.h" />
     <ClInclude Include="include\cpp\net\HttpRouteDatabase.h" />
+    <ClInclude Include="include\cpp\net\HttpStatus.h" />
     <ClInclude Include="include\cpp\net\HttpUrl.h" />
     <ClInclude Include="include\cpp\net\Socket.h" />
     <ClInclude Include="include\cpp\net\SocketFactory.h" />
