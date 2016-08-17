@@ -74,7 +74,8 @@ namespace cpp{
 			{
 				string s;
 				s.append("GET ");
-				s.append(_httpUrl.pathString());
+				//s.append(_httpUrl.pathString());
+				s.append(_httpUrl.encodedPathString());
 				s.append(" HTTP/1.1\r\n");
 				s.append(_httpHeader.toString());
 				s.append("\r\n");

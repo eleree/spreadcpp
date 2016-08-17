@@ -49,6 +49,36 @@ namespace cpp{
 				return "Mock Result"; 
 			};
 
+			string chunkedLengthBody(void)
+			{
+				string s;
+				string rawResponse = "";
+				while(1){
+					int32_t chunkLength = 0;
+					/* hexadecimal number \r\n */
+					rawResponse = _connection->readline();
+					if ((rawResponse.compare("0") == 0))
+						break;
+					chunkLength = std::stoi(rawResponse,0,16);
+					if (chunkLength <= 0)
+						return s;
+
+					/* a chunk of data of the given size */
+					rawResponse = _connection->readline();
+					if (chunkLength != rawResponse.size())
+						return s;
+
+					s.append(rawResponse);					
+
+					if (rawResponse.compare("") == 0)
+						break;
+				}
+				rawResponse = _connection->readline();
+				if (rawResponse.compare("") != 0)
+					cout << "Not Endof Http Stream?" << endl;
+				return s;
+			}
+
 			string unknownLengthBody(void)
 			{
 				string s;
@@ -88,13 +118,17 @@ namespace cpp{
 				if (_connection == nullptr )
 					return "";
 					
-				if (_connectionType == RESPONSE_BODY_UNKNOWN)
-					return unknownLengthBody();
-
 				if (_connectionType == RESPONSE_BODY_FIX_LENGTH)
 					return fixLengthBody();
 
+				if (_connectionType == RESPONSE_BODY_CHUNKED)
+					return chunkedLengthBody();
+
+				if (_connectionType == RESPONSE_BODY_UNKNOWN)
+					return unknownLengthBody();
+
 				_connection->release();
+
 				return "";			
 			};
 

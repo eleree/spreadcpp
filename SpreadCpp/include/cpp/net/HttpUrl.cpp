@@ -101,6 +101,33 @@ int32_t HttpUrl::addPath(string path)
 	_pathList.push_back(path);
 	return 0;
 }
+
+HttpUrl& HttpUrl::addQuery(string nameValue)
+{
+	_queryList.push_back(nameValue);
+	return *this;
+}
+
+HttpUrl& HttpUrl::addQuery(string name, string value)
+{
+	_queryList.push_back(name+"="+value);
+	return *this;
+}
+
+string HttpUrl::queryString(void)
+{
+	string s = "?";
+	int32_t i = _queryList.size();
+	for (auto &q : _queryList)
+	{
+		s.append(q);
+		if (i-- > 1)
+			s.append("&");
+	}
+	return s;
+}
+
+
 string HttpUrl::toString(void)
 {
 	string url;
@@ -193,10 +220,12 @@ HttpUrl HttpUrl::parse(string url)
 			if (numberSignIndex < 0)
 			{
 				cout << String::substring(url, queryStart) << endl;
+				httpUrl.addQuery(String::substring(url, queryStart));
 			}
 			else
 			{
 				cout << String::substring(url, queryStart, numberSignIndex) << endl;
+				httpUrl.addQuery(String::substring(url, queryStart, numberSignIndex));
 				url = String::substring(url, numberSignIndex);
 			}
 			break;
@@ -252,5 +281,13 @@ int32_t HttpUrl::delimiterOffset(string input, int32_t pos, int32_t limit, strin
 	for (int i = pos; i < limit; i++) {
 		if (String::indexOf(delimiters, String::charAt(input,i)) != -1) return i;
 	}
-	return limit;
+	return -1;
+}
+
+string HttpUrl::encodedPathString(void)
+{
+	string p;
+	p.append(pathString());
+	p.append(queryString());
+	return p;
 }

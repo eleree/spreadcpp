@@ -118,8 +118,8 @@ int main(int argc, char ** argv)
 	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
 
 	HttpRequest httpRequest;	
-	//httpRequest.url("http://192.168.1.1/hidden_info.html");
-	httpRequest.url("http://192.168.1.1/");
+	//httpRequest.url("http://192.168.1.1/");
+	httpRequest.url("http://wthrcdn.etouch.cn/WeatherApi?citykey=101010100");
 	httpRequest.follow(true);
 	HttpResponse httpResponse  = httpClient->execute(httpRequest);
 	if (httpResponse.isSuccess())

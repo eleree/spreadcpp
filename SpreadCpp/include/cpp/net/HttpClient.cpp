@@ -1,5 +1,6 @@
 #include <cpp/lang/String.h>
 #include <cpp/net/HttpClient.h>
+#include <cpp/net/DNS.h>
 
 using namespace std;
 using namespace cpp::net;
@@ -82,6 +83,7 @@ HttpResponse HttpClient::retryAndFollowInterceptor(HttpRequest request)
 				continue;
 			}// Http Code 302
 
+			return httpResponse;
 		}
 		
 	}
@@ -95,18 +97,19 @@ HttpResponse HttpClient::BridgeInterceptor(HttpRequest request)
 
 	if (request.header().get("Host").compare("") == 0)
 	{
-		request.header().set("Host", "192.168.1.1");
+		request.header().set("Host", request.url().host());
 	}
 
 	if (request.header().get("Connection").compare("") == 0)
 	{
-		request.header().set("Connection", "Keep-Alive");
+		request.header().set("Connection", "keep-alive");
 	}
 
 	if (request.header().get("User-Agent").compare("") == 0)
 	{
-		request.header().set("User-Agent", "Spread HttpClient");
+		request.header().set("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36");
 	}
+
 	request.header().set("Cache-Control", " max-age=0");
 	request.header().set("Accept-Encoding", " gzip, deflate, sdch");
 	request.header().set("Accept-Language", " zh-CN,zh;q=0.8");
@@ -146,8 +149,14 @@ HttpResponse HttpClient::ConnectionInterceptor(HttpRequest request)
 		//httpResponse.body().init(0, contentLength, connection);
 		httpResponse.body(make_shared<HttpResponseBody>(0, contentLength, HttpResponseBody::RESPONSE_BODY_FIX_LENGTH ,connection));
 	}else{
-		cout << "Unknown Connection" << endl;
-		httpResponse.body(make_shared<HttpResponseBody>(0, 0, HttpResponseBody::RESPONSE_BODY_UNKNOWN, connection));
+		if (httpResponse.header().get("Transfer-Encoding").compare("chunked") != 0)
+		{
+			cout << "Connection Chunkedy" << endl;
+			httpResponse.body(make_shared<HttpResponseBody>(0, 0, HttpResponseBody::RESPONSE_BODY_CHUNKED, connection));
+		}else{
+			cout << "Unknown Connection" << endl;
+			httpResponse.body(make_shared<HttpResponseBody>(0, 0, HttpResponseBody::RESPONSE_BODY_UNKNOWN, connection));
+		}
 		//connection->release();
 	}
 
@@ -160,15 +169,20 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request, shared_ptr<Http
 	int32_t rc = 0;
 	HttpResponse httpResponse;
 	
-	connection->setAddress(request.url().host(),request.url().port());
+	list<string> ipv4Address = DNS::Instance(request.url().host(), 80)->getIPv4Address();
+	for (auto && a : ipv4Address)
+		cout << a << endl;
+	auto address = ipv4Address.begin();
+	cout << "Use IP:" << *address << endl;
+	connection->setAddress(*address, request.url().port());
 	connection->connectSocket(5000, 5000);
 
-	//Socket clientSocket;
-	//clientSocket.connect("192.168.18.1", 80, 10000);
 	cout << "Start Connecting Socket" << endl;
 	string httpHeader = request.toHttpString();
+	cout << "Http Header:" << httpHeader << endl;
+
 	rc = connection->write((char *)httpHeader.c_str(), httpHeader.size());
-	//rc = clientSocket.send((char *)httpHeader.c_str(), httpHeader.size());
+
 	if (rc<0)
 	{
 		httpResponse.status(HttpResponse::TIMEOUT);
@@ -176,11 +190,6 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request, shared_ptr<Http
 	}
 	cout << "Start Socket Receive" << endl;
 
-	#define DEFAULT_BUFLEN 512
-	int iResult = 1;
-	char recvbuf[DEFAULT_BUFLEN];
-	int recvbuflen = DEFAULT_BUFLEN;
-	memset(recvbuf, 0, DEFAULT_BUFLEN);
 	do {
 		string rawResponse = connection->readline();
 		if (rawResponse.empty())
@@ -197,11 +206,11 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request, shared_ptr<Http
 		if (equalToken > 0)
 			httpResponse.header().set(String::substring(rawResponse, 0, equalToken), \
 									String::substring(rawResponse,equalToken+1));
-		cout << rawResponse << endl;
-	} while (iResult > 0);
+	} while(1);
+
 	httpResponse.setSuccessStatus(true);
 	httpResponse.status(HttpResponse::SUCCESS);
-	cout << "Http Status: " << httpResponse.httpStatus() << endl;
-	cout << httpResponse.toString() << endl;
+	cout << "Http Response Status: " << httpResponse.httpStatus() << endl;
+	cout << "Http Response Header: " << httpResponse.toString() << endl;
 	return httpResponse;
 }

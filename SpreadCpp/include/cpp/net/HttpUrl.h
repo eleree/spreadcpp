@@ -40,15 +40,19 @@ namespace cpp{
 			HttpUrl& fragment(string fragment);
 
 			string pathString(void);
-			list<string> path(void);
-		
+			list<string> path(void);	
+			HttpUrl& path(string path);
 			int32_t addPath(string path);
 
 			list<string> query(void);
+			HttpUrl& query(string nameValue);
+			HttpUrl& addQuery(string nameValue);
 			HttpUrl& addQuery(string name, string value);
+			string queryString(void);
 
-			list<string> encodedPath(void);
-			list<string> encodedQuery(void);
+
+			string encodedPathString(void);
+			string encodedQuery(void);
 
 			string toString(void);
 
