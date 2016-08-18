@@ -116,8 +116,13 @@ HttpUrl& HttpUrl::addQuery(string name, string value)
 
 string HttpUrl::queryString(void)
 {
+	
 	string s = "?";
 	int32_t i = _queryList.size();
+
+	if (_queryList.size() == 0)
+		return "";
+
 	for (auto &q : _queryList)
 	{
 		s.append(q);

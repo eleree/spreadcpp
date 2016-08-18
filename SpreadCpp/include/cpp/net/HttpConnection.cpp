@@ -58,10 +58,11 @@ string HttpConnection::readline()
 
 	for (;;)
 	{
-		char c;
+		char c = '\0';
 		rc = _socket->recv(&c, 1);
 		if (rc <= 0)
 			return line;
+
 		if (c == '\r')
 			continue;
 		else if (c == '\n')
