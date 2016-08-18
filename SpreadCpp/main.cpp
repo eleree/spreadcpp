@@ -115,11 +115,14 @@ int main(int argc, char ** argv)
 	}
 	*/
 
+	if (String::equalsIgnoreCase("abcd", "AbCd") == true)
+		cout << "The same" << endl;
 	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
 
 	HttpRequest httpRequest;	
 	//httpRequest.url("http://192.168.1.1/");
-	httpRequest.url("http://wthrcdn.etouch.cn/WeatherApi?citykey=101010100");
+	//httpRequest.url("http://wthrcdn.etouch.cn/WeatherApi?citykey=101010100");
+	httpRequest.url("http://publicobject.com/helloworld.txt");
 	httpRequest.follow(true);
 	HttpResponse httpResponse  = httpClient->execute(httpRequest);
 	if (httpResponse.isSuccess())

@@ -1,5 +1,4 @@
 #include <cpp/lang/String.h>
-
 using namespace cpp::lang;
 
 string String::convert(string s, Charset from, Charset to)
@@ -53,4 +52,15 @@ int32_t String::indexOf(string thisString, const char c)
 int32_t String::indexOf(string thisString, const char c, int32_t fromIndex)
 {
 	return thisString.find(c,fromIndex);
+}
+
+string String::toLowerCase(string thisString)
+{
+	std::transform(thisString.begin(), thisString.end(), thisString.begin(), tolower);
+	return thisString;
+}
+
+bool String::equalsIgnoreCase(string thisString, string otherString)
+{
+	return toLowerCase(thisString).compare(toLowerCase(otherString)) == 0;
 }

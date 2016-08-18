@@ -141,11 +141,12 @@ HttpResponse HttpClient::ConnectionInterceptor(HttpRequest request)
 	// Find a idle connection, if no idle connection found, new one;
 	httpResponse = NetworkInterceptor(request, connection);
 	
-	// if no Content-length return, release this connection
-	if (httpResponse.header().get("Content-length").compare("") != 0)
+	// if no Content-length return, release this 
+	cout << httpResponse.header().get("Content-Length") << endl;
+	if (httpResponse.header().get("Content-Length").compare("") != 0)
 	{		
-		int32_t contentLength = std::stoi(httpResponse.header().get("Content-length"), 0, 10);
-		cout << "Content-length:" << std::stoi(httpResponse.header().get("Content-length"), 0, 10) << endl;
+		int32_t contentLength = std::stoi(httpResponse.header().get("Content-Length"), 0, 10);
+		cout << "Content-length:" << std::stoi(httpResponse.header().get("Content-Length"), 0, 10) << endl;
 		//httpResponse.body().init(0, contentLength, connection);
 		httpResponse.body(make_shared<HttpResponseBody>(0, contentLength, HttpResponseBody::RESPONSE_BODY_FIX_LENGTH ,connection));
 	}else{

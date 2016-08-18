@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <string>
+#include <algorithm>
 #include <cpp/lang/GB2312CharsetDecoder.h>
 #include <cpp/lang/UTF8CharsetEncoder.h>
 using namespace std;
@@ -26,6 +27,8 @@ namespace cpp{
 			static char charAt(string thisString, uint32_t index);
 			static int32_t indexOf(string thisString, const char c);
 			static int32_t indexOf(string thisString, const char c, int32_t fromIndex);
+			static string toLowerCase(string thisString);
+			static bool equalsIgnoreCase(string thisString, string otherString);
 		private:
 		};
 	}

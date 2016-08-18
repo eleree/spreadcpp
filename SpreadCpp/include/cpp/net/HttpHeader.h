@@ -1,14 +1,18 @@
 #ifndef _CPP_NET_HTTP_HEADER_H_
 #define _CPP_NET_HTTP_HEADER_H_
 
-#include <map>
+#include <mutex>
+#include <vector>
 #include <memory>
 #include <iostream>
 #include <string>
 #include <stdlib.h>
 #include <stdint.h>
 
+#include <cpp/lang/String.h>
+
 using namespace std;
+using namespace cpp::lang;
 
 namespace cpp{
 	namespace net{
@@ -17,47 +21,104 @@ namespace cpp{
 			HttpHeader(){};
 			~HttpHeader(){};
 
+			int32_t clear(void)
+			{
+				_nameValueVector.clear();
+			}
+
 			string get(string name)
 			{
-				auto search = _nameValueMap.find(name);
-				if (search != _nameValueMap.end()) {
-					return search->second;
+				if (_nameValueVector.size() <= 0)
+					return "";
+
+				for (uint32_t i = 0; i < _nameValueVector.size(); i += 2)
+				{
+					// Found it, the return
+					if (String::equalsIgnoreCase(name, _nameValueVector[i]))
+						return _nameValueVector[i+1];
 				}
+
 				return "";
 			}
+
+			HttpHeader& add(string name, string value)
+			{
+				if (name.empty() || value.empty())
+					return *this;
+
+				for (uint32_t i = 0; i < _nameValueVector.size(); i+=2)
+				{
+					// There is the header already
+					if (String::equalsIgnoreCase(name,_nameValueVector[i]))
+						return *this;
+				}
+
+				_nameValueVector.push_back(name);
+				_nameValueVector.push_back(value);
+
+				return *this;
+
+			}
+
+			HttpHeader& remove(string name)
+			{				
+				if (name.empty())
+					return *this;
+
+				for (uint32_t i = 0; i < _nameValueVector.size(); i += 2)
+				{
+					// There is the header already
+					if (String::equalsIgnoreCase(name, _nameValueVector[i]))
+					{
+						// Remove name and value pair
+						_nameValueVector.erase(_nameValueVector.begin() + i);
+						_nameValueVector.erase(_nameValueVector.begin() + i);
+					}
+				}
+
+				return *this;
+			}			
 
 			HttpHeader& set(string name, string value)
 			{
 				if (name.empty() || value.empty())
 					return *this;
 
-				std::pair<std::map<string, string>::iterator, bool> ret;
-				ret = _nameValueMap.insert(std::pair<string, string>(name, value));
-				if (ret.second == false)
+				for (uint32_t i = 0; i < _nameValueVector.size(); i += 2)
 				{
-					_nameValueMap.erase(name);
-					_nameValueMap.insert(std::pair<string, string>(name, value));
+					// Found, just update it
+					if (String::equalsIgnoreCase(name, _nameValueVector[i]))
+					{
+						_nameValueVector[i + 1] = value;
+						return *this;
+					}
 				}
-
-				return *this;
+				// Not found, just add it
+				return add(name, value);
 			}
 
 			uint32_t size(void)
 			{
-				return _nameValueMap.size();
+				return _nameValueVector.size()/2;
 			}
 
 			string toString(void)
 			{
 				string result;
-				for (auto &kv : _nameValueMap) {		
-					result.append(kv.first).append(":").append(kv.second).append("\r\n");					
+
+				for (uint32_t i = 0; i < _nameValueVector.size(); i += 2)
+				{
+					result.append(_nameValueVector[i]);
+					result.append(":");
+					result.append(_nameValueVector[i+1]);
+					result.append("\r\n");
 				}
+
 				return result;
 			}
 
 		private:
-			map<string, string> _nameValueMap;
+			vector<string> _nameValueVector;
 		};
 	}
 }

@@ -94,20 +94,28 @@ namespace cpp{
 
 			string fixLengthBody(void)
 			{
+				int32_t readLen = 0;
+				int32_t targetReadLen = _contentLength;
 				string s;
 				char streamBuf[512];
 
 				if (_connection == nullptr || _contentLength <= 0)
 					return "";
-
-				while (_connection->read(streamBuf, 512) > 0)
+				
+				while ((readLen = _connection->read(streamBuf, 512))> 0)
 				{
-					s.append(string(streamBuf));
-					cout << string(streamBuf) << endl;
+					targetReadLen -= readLen;
+					s.append(string(streamBuf,readLen));
 					memset(streamBuf, 0, 512);
+
+					if (targetReadLen == 0)
+						return s;
 				}
 
-				_connection->release();
+				if (targetReadLen != 0)
+				{
+					// We didn't read all http response body
+				}
 
 				return s;
 			}
