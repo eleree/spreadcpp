@@ -4,13 +4,19 @@ using namespace cpp::net;
 
 SSLSocket::SSLSocket()
 {
-	(void)SSL_library_init();
 	SSLeay_add_ssl_algorithms();
-	meth = (SSL_METHOD*)SSLv2_client_method();
+	meth = (SSL_METHOD*)SSLv23_client_method();
+	ERR_print_errors_fp(stderr);
+	SSL_load_error_strings();
+	if (meth == NULL)
+	{
+		cout << "Meth is Null" << endl;
+	}
 	ctx = SSL_CTX_new(meth);
 	if (ctx == NULL)
 	{
-		cout << "New SSL context fail";
+		cout << "New SSL context fail" << endl;;
+		ERR_print_errors_fp(stderr);
 		return;
 	}
 	sd = socket(AF_INET, SOCK_STREAM, 0);

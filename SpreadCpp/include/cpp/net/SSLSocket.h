@@ -9,6 +9,7 @@
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
+#pragma warning(disable:4996)
 #endif
 
 #include <iostream>

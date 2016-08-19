@@ -16,6 +16,8 @@
 #include <cpp/lang/UTF8CharsetEncoder.h>
 #include <cpp/net/HttpClient.h>
 #include <cpp/net/DNS.h>
+#include <openssl/applink.c>
+
 using namespace cpp::util;
 using namespace cpp::net;
 using namespace cpp::lang;
