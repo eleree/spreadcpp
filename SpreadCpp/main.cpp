@@ -1,4 +1,6 @@
 ﻿#define WIN32_LEAN_AND_MEAN
+#include <winsock2.h>
+#include <windows.h>
 
 #include <cpp/util/ArrayList.h>
 #include <cpp/util/LinkedList.h>
@@ -8,6 +10,7 @@
 #include <cpp/util/LockGuard.h>
 #include <cpp/net/HttpUrl.h>
 #include <cpp/net/Socket.h>
+#include <cpp/net/SSLSocket.h>
 #include <cpp/net/SocketFactory.h>
 #include <cpp/lang/String.h>
 #include <cpp/lang/UTF8CharsetEncoder.h>
@@ -55,6 +58,9 @@ private:
 
 int main(int argc, char ** argv)
 {
+	Socket socket;
+	SSLSocket sslSocket;
+	sslSocket.connect("104.20.44.7", 433);
 	/*
 	string x = "http://android.ccom \t\f\n";
 	string y = x.substr(0, 23);
@@ -116,7 +122,7 @@ int main(int argc, char ** argv)
 	*/
 
 	if (String::equalsIgnoreCase("abcd", "AbCd") == true)
-		cout << "The same" << endl;
+		cout << "Same" << endl;
 	shared_ptr<HttpClient> httpClient = HttpClient::getInstance();
 
 	HttpRequest httpRequest;	
