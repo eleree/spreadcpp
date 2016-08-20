@@ -62,7 +62,7 @@ int main(int argc, char ** argv)
 {
 	Socket socket;
 	SSLSocket sslSocket;
-	sslSocket.connect("104.20.44.7", 433);
+	sslSocket.connect("104.20.45.7", 443);
 	/*
 	string x = "http://android.ccom \t\f\n";
 	string y = x.substr(0, 23);

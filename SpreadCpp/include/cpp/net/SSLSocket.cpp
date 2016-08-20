@@ -36,6 +36,7 @@ int32_t SSLSocket::connect(void)
 
 int32_t SSLSocket::connect(string host, uint16_t port)
 {
+	connect(host, port, 5000);
 	return 0;
 }
 
@@ -112,13 +113,16 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 				cout << "Socket Connected" << endl;
 				u_long iMode = 0;
 				ioctlsocket(_socket, FIONBIO, (u_long FAR*)&iMode);
-				ssl = SSL_new(ctx); CHK_NULL(ssl);
-				SSL_set_fd(ssl, sd);
-				error = SSL_connect(ssl); CHK_SSL(error);
+				ssl = SSL_new(ctx); 
+				CHK_NULL(ssl);
+				SSL_set_fd(ssl, _socket);
+				error = SSL_connect(ssl); 
+				CHK_SSL(error);
 				printf("SSL connection using %s\n", SSL_get_cipher(ssl));
 				/* Get Server certificate - optional */
 
-				scert = SSL_get_peer_certificate(ssl); CHK_NULL(scert);
+				scert = SSL_get_peer_certificate(ssl); 
+				CHK_NULL(scert);
 				printf("Server Certificate:\n");
 
 				txt = X509_NAME_oneline(X509_get_subject_name(scert), 0, 0);

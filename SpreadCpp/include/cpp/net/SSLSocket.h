@@ -34,8 +34,8 @@ namespace cpp{
 		class SSLSocket{
 		public:
 #define CHK_NULL(x) if ((x)==NULL) exit (1)
-#define CHK_ERR(err,s) if ((err)==-1) { perror(s); exit(1); }
-#define CHK_SSL(err) if ((err)==-1) { ERR_print_errors_fp(stderr); exit(2); }
+#define CHK_ERR(err,s) if ((err)==-1) { perror(s);  }
+#define CHK_SSL(err) if ((err)==-1) { ERR_print_errors_fp(stderr); }
 
 			SSLSocket();
 			~SSLSocket();
