@@ -63,6 +63,21 @@ int main(int argc, char ** argv)
 	Socket socket;
 	SSLSocket sslSocket;
 	sslSocket.connect("104.20.45.7", 443);
+	string testSSL = "GET /cgi-bin/randbyte?nbytes=32&format=h HTTP/1.1\r\n"
+		"Host: www.random.org \r\n"
+		"Connection: close\r\n\r\n";
+	sslSocket.send((char *)testSSL.c_str(), testSSL.size());
+	int len = 0;
+	do
+	{
+		char buff[1536] = {0};
+		len = sslSocket.recv(buff, sizeof(buff));
+
+		if (len > 0)
+			printf("%s", buff);
+
+	} while (len > 0);
+
 	/*
 	string x = "http://android.ccom \t\f\n";
 	string y = x.substr(0, 23);

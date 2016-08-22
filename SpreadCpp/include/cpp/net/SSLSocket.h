@@ -43,13 +43,15 @@ namespace cpp{
 			int32_t connect(void);
 			int32_t connect(string host, uint16_t port);
 			int32_t connect(string host, uint16_t port, uint32_t timeout);
-
+			int32_t send(char * sendBuf, uint32_t sendSize);
+			int32_t recv(char * recvBuf, uint32_t recvLen);
+			string peerCertificate(void);
 		private:			
-			SOCKET sd;
-			SSL* ssl = NULL;
+			SSL* _ssl = NULL;
 			SSL_METHOD *meth;
 			X509* scert = NULL;
 			SSL_CTX *ctx = NULL;
+			string _peerCertificate;
 
 			string _host;
 			uint16_t _port;

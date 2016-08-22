@@ -19,14 +19,20 @@ SSLSocket::SSLSocket()
 		ERR_print_errors_fp(stderr);
 		return;
 	}
-	sd = socket(AF_INET, SOCK_STREAM, 0);
 
 	cout << "Create SSL Socket 2" << endl;
 }
 
 SSLSocket::~SSLSocket()
 {
+	if (_socket != INVALID_SOCKET)
+		closesocket(_socket);
 
+	if (_ssl != NULL)
+		SSL_free(_ssl);
+
+	if (ctx != NULL)		
+		SSL_CTX_free(ctx);
 }
 
 int32_t SSLSocket::connect(void)
@@ -36,8 +42,7 @@ int32_t SSLSocket::connect(void)
 
 int32_t SSLSocket::connect(string host, uint16_t port)
 {
-	connect(host, port, 5000);
-	return 0;
+	return connect(host, port, 5000);
 }
 
 int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
@@ -113,26 +118,38 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 				cout << "Socket Connected" << endl;
 				u_long iMode = 0;
 				ioctlsocket(_socket, FIONBIO, (u_long FAR*)&iMode);
-				ssl = SSL_new(ctx); 
-				CHK_NULL(ssl);
-				SSL_set_fd(ssl, _socket);
-				error = SSL_connect(ssl); 
+				_ssl = SSL_new(ctx); 
+				if (_ssl == NULL)
+				{
+					cout << "SSL New Fail " << endl;
+					return -1;
+				}
+				
+				SSL_set_fd(_ssl, _socket);
+				error = SSL_connect(_ssl); 
+
+				if (error == -1)
+				{
+					ERR_print_errors_fp(stderr);
+					return -1;
+				}
+
 				CHK_SSL(error);
-				printf("SSL connection using %s\n", SSL_get_cipher(ssl));
+				printf("SSL connection using %s\n", SSL_get_cipher(_ssl));
 				/* Get Server certificate - optional */
 
-				scert = SSL_get_peer_certificate(ssl); 
+				scert = SSL_get_peer_certificate(_ssl); 
 				CHK_NULL(scert);
 				printf("Server Certificate:\n");
 
 				txt = X509_NAME_oneline(X509_get_subject_name(scert), 0, 0);
 				CHK_NULL(txt);
-				printf("\t Subject: %s\n", txt);
+				printf("Subject: %s\n", txt);
 				OPENSSL_free(txt);
 
 				txt = X509_NAME_oneline(X509_get_issuer_name(scert), 0, 0);
 				CHK_NULL(txt);
-				printf("\t Issuer: %s\n", txt);
+				printf("Issuer: %s\n", txt);
 				OPENSSL_free(txt);
 
 				/* Here we can check what we wanted about the Server certificate */
@@ -147,4 +164,19 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 	freeaddrinfo(result);
 
 	return rc;
+}
+
+
+int32_t SSLSocket::send(char * sendBuf, uint32_t sendSize)
+{
+	if (_socket == INVALID_SOCKET || _ssl == NULL)
+		return -1;
+	return 	SSL_write(_ssl, sendBuf, sendSize);
+}
+
+int32_t SSLSocket::recv(char * recvBuf, uint32_t recvLen)
+{
+	if (_socket == INVALID_SOCKET || _ssl == NULL)
+		return -1;
+	return SSL_read(_ssl, recvBuf, recvLen);
 }
