@@ -1,12 +1,12 @@
 #include <cpp/net/SSLSocket.h>
 
+using namespace std;
 using namespace cpp::net;
 
-SSLSocket::SSLSocket()
+SSLSocket::SSLSocket(string method)
 {
-	SSLeay_add_ssl_algorithms();
-	meth = (SSL_METHOD*)SSLv23_client_method();
-	SSL_load_error_strings();
+	/* Need to be replace by openssl method factory */
+	meth = (SSL_METHOD*)TLSv1_2_client_method();
 	if (meth == NULL)
 	{
 		cout << "Meth is Null" << endl;
@@ -19,28 +19,40 @@ SSLSocket::SSLSocket()
 		ERR_print_errors_fp(stderr);
 		return;
 	}
+}
 
-	cout << "Create SSL Socket 2" << endl;
+SSLSocket::SSLSocket()
+{
+
+	meth = (SSL_METHOD*)SSLv23_client_method();
+	if (meth == NULL)
+	{
+		cout << "Meth is Null" << endl;
+		ERR_print_errors_fp(stderr);
+	}
+	ctx = SSL_CTX_new(meth);
+	if (ctx == NULL)
+	{
+		cout << "New SSL context fail" << endl;;
+		ERR_print_errors_fp(stderr);
+		return;
+	}
 }
 
 SSLSocket::~SSLSocket()
 {
-	if (_socket != INVALID_SOCKET)
-		closesocket(_socket);
-
+	
 	if (_peerCertificate != NULL)
 		X509_free(_peerCertificate);
 
 	if (_ssl != NULL)
 		SSL_free(_ssl);
 
+	if (_socket != INVALID_SOCKET)
+		closesocket(_socket);
+
 	if (ctx != NULL)		
 		SSL_CTX_free(ctx);
-}
-
-int32_t SSLSocket::connect(void)
-{
-	return 0;
 }
 
 int32_t SSLSocket::connect(string host, uint16_t port)
@@ -66,7 +78,6 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 	if (inet_addr(_host.c_str()) == INADDR_NONE)
 		return rc;
 
-	cout << "Start Connect" << endl;
 	//rc = getaddrinfo(_host.c_str(), to_string(_port).c_str(), &hints, &result);
 	_socket = socket(hints.ai_family, hints.ai_socktype, hints.ai_protocol);
 	if (_socket == INVALID_SOCKET)
@@ -89,11 +100,9 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 
 	if (rc != NO_ERROR)
 	{
-		cout << "Start Select" << endl;
 		struct timeval tm;
 		tm.tv_sec = _timeout / 1000;
 		tm.tv_usec = _timeout % 1000 * 1000;
-		int ret = -1;
 
 		fd_set set;
 		FD_ZERO(&set);
@@ -101,10 +110,10 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 		if (select(-1, NULL, &set, NULL, &tm) <= 0)
 		{
 			closesocket(_socket);
+			rc = -1;
 			cout << "Invalid Socket" << endl;
 			_socket = INVALID_SOCKET;
-		}
-		else{
+		}else{
 			int error = -1;
 			int optLen = sizeof(int);
 			getsockopt(_socket, SOL_SOCKET, SO_ERROR, (char*)&error, &optLen);
@@ -118,18 +127,46 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 			else{
 				cout << "Socket Connected" << endl;
 				u_long iMode = 0;
-				ioctlsocket(_socket, FIONBIO, (u_long FAR*)&iMode);			
+				ioctlsocket(_socket, FIONBIO, (u_long FAR*)&iMode);		
+				_isConnected = true;
 				rc = _connectSSLSocket();
 			}
 		}
 	}
 
 	if (result != NULL)
-	freeaddrinfo(result);
+		freeaddrinfo(result);
 
 	return rc;
 }
 
+
+int32_t SSLSocket::close()
+{
+	_isOutputShutdown = true;
+	_isInputShutdown = true;
+	_isClosed = true;
+
+#if defined(_WIN32) ||  defined(_WIN64)
+	return closesocket(_socket);
+#endif
+}
+
+int32_t SSLSocket::shutdownInput()
+{
+	_isInputShutdown = true;
+#if defined(_WIN32) ||  defined(_WIN64)
+	return shutdown(_socket, SD_RECEIVE);
+#endif
+}
+
+int32_t SSLSocket::shutdownOutput()
+{
+	_isOutputShutdown = true;
+#if defined(_WIN32) ||  defined(_WIN64)
+	return shutdown(_socket, SD_SEND);
+#endif
+}
 
 int32_t SSLSocket::send(char * sendBuf, uint32_t sendSize)
 {
@@ -148,7 +185,9 @@ int32_t SSLSocket::recv(char * recvBuf, uint32_t recvLen)
 int32_t SSLSocket::_connectSSLSocket(void)
 {
 	int32_t error = 0;
-	char* txt = NULL;
+
+	if (_isConnected != true || _isEncrypted == true )
+		return -1;
 
 	_ssl = SSL_new(ctx);
 	if (_ssl == NULL)
@@ -168,12 +207,10 @@ int32_t SSLSocket::_connectSSLSocket(void)
 	}
 
 	_isEncrypted = true;
-	CHK_SSL(error);
-	printf("SSL connection using %s\n", SSL_get_cipher(_ssl));
 	_cipherSuite = string(SSL_get_cipher(_ssl));
 	_peerCertificate = SSL_get_peer_certificate(_ssl);
 	
-	return 0;
+	return error;
 }
 
 string SSLSocket::cipherSuite(void)
@@ -192,26 +229,60 @@ X509* SSLSocket::peerCertificate(void)
 
 string SSLSocket::peerCertificateString(void)
 {
-	char* txt = NULL;
-
+	char buffer[512] = {0};
+	int32_t bufferLen = 0;
+	string certificateString;
 	if ( _isEncrypted != true || _socket == INVALID_SOCKET || \
 			_peerCertificate == NULL)
 		return "";
 
-	CHK_NULL(_peerCertificate);
-	printf("Server Certificate:\n");
+	BIO *mem = BIO_new(BIO_s_mem());
+	X509_print(mem, _peerCertificate);
+	while (1)
+	{
+		bufferLen = BIO_gets(mem, (char*) buffer, 512);
+		if (bufferLen <= 0){
+			break;
+		}
+		certificateString.append(string(buffer));
+	}
+	BIO_free(mem);
 
-	txt = X509_NAME_oneline(X509_get_subject_name(_peerCertificate), 0, 0);
-	CHK_NULL(txt);
-	printf("Subject: %s\n", txt);
-	OPENSSL_free(txt);
+	return certificateString;
+}
 
-	txt = X509_NAME_oneline(X509_get_issuer_name(_peerCertificate), 0, 0);
-	CHK_NULL(txt);
-	printf("Issuer: %s\n", txt);
-	OPENSSL_free(txt);
-	BIO * outbio = BIO_new_fp(stdout, BIO_NOCLOSE);
-	X509_print(outbio, _peerCertificate);
-	system("pause");
-	return "";
+string SSLSocket::peerCertificateSubjectName(void)
+{
+	char* name = NULL;
+	string subjectName;
+
+	if (_isEncrypted != true || _socket == INVALID_SOCKET || \
+		_peerCertificate == NULL)
+		return "";
+
+	name = X509_NAME_oneline(X509_get_subject_name(_peerCertificate), 0, 0);
+	if (name == NULL)
+		return "";
+	subjectName = string(name);
+
+	OPENSSL_free(name);
+	return subjectName;
+}
+
+string SSLSocket::peerCertificateIssuerName(void)
+{
+	char* name = NULL;
+	string issuerName;
+
+	if (_isEncrypted != true || _socket == INVALID_SOCKET || \
+		_peerCertificate == NULL)
+		return "";
+
+	name = X509_NAME_oneline(X509_get_issuer_name(_peerCertificate), 0, 0);
+	if (name == NULL)
+		return "";
+	issuerName = string(name);
+
+	OPENSSL_free(name);
+	return issuerName;
 }

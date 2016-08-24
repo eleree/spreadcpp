@@ -39,19 +39,25 @@ namespace cpp{
 #define CHK_SSL(err) if ((err)==-1) { ERR_print_errors_fp(stderr); }
 
 			SSLSocket();
+			SSLSocket(string method);
 			~SSLSocket();
 
-			int32_t connect(void);
 			int32_t connect(string host, uint16_t port);
 			int32_t connect(string host, uint16_t port, uint32_t timeout);
 			int32_t connect(string host, uint16_t port, int32_t cipherSuite, uint32_t timeout);
 			int32_t send(char * sendBuf, uint32_t sendSize);
 			int32_t recv(char * recvBuf, uint32_t recvLen);
+
 			X509* peerCertificate(void);
 			string peerCertificateString(void);
+			string peerCertificateSubjectName(void);
+			string peerCertificateIssuerName(void);
 			string cipherSuite(void);
 			bool isEncrypted(void);
 
+			int32_t close();
+			int32_t shutdownInput();
+			int32_t shutdownOutput();
 		private:			
 			SSL* _ssl = NULL;
 			SSL_METHOD *meth;
