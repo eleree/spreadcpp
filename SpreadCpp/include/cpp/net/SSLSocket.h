@@ -43,9 +43,12 @@ namespace cpp{
 			int32_t connect(void);
 			int32_t connect(string host, uint16_t port);
 			int32_t connect(string host, uint16_t port, uint32_t timeout);
+			int32_t connect(string host, uint16_t port, int32_t cipherSuite, uint32_t timeout);
 			int32_t send(char * sendBuf, uint32_t sendSize);
 			int32_t recv(char * recvBuf, uint32_t recvLen);
 			string peerCertificate(void);
+			bool isEncrypted(void);
+
 		private:			
 			SSL* _ssl = NULL;
 			SSL_METHOD *meth;
@@ -57,12 +60,15 @@ namespace cpp{
 			uint16_t _port;
 			uint32_t _timeout;
 			bool _isClosed;
+			bool _isEncrypted;
 			bool _isConnected;
 			bool _isInputShutdown;
 			bool _isOutputShutdown;
 #if defined(_WIN32) ||  defined(_WIN64)
 			SOCKET _socket = INVALID_SOCKET;
 #endif
+			int32_t _connectSSLSocket(void);
+			SSL_METHOD * _makeCipher;
 		};
 	}
 }

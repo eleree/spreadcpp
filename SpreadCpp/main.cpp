@@ -63,6 +63,7 @@ int main(int argc, char ** argv)
 	Socket socket;
 	SSLSocket sslSocket;
 	sslSocket.connect("104.20.45.7", 443);
+	//sslSocket.connect("42.96.206.207", 80);
 	string testSSL = "GET /cgi-bin/randbyte?nbytes=32&format=h HTTP/1.1\r\n"
 		"Host: www.random.org \r\n"
 		"Connection: close\r\n\r\n";

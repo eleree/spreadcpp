@@ -6,11 +6,11 @@ SSLSocket::SSLSocket()
 {
 	SSLeay_add_ssl_algorithms();
 	meth = (SSL_METHOD*)SSLv23_client_method();
-	ERR_print_errors_fp(stderr);
 	SSL_load_error_strings();
 	if (meth == NULL)
 	{
 		cout << "Meth is Null" << endl;
+		ERR_print_errors_fp(stderr);
 	}
 	ctx = SSL_CTX_new(meth);
 	if (ctx == NULL)
@@ -131,9 +131,11 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 				if (error == -1)
 				{
 					ERR_print_errors_fp(stderr);
+					SSL_free(_ssl);
+					_ssl = NULL;
 					return -1;
 				}
-
+				_isEncrypted = true;
 				CHK_SSL(error);
 				printf("SSL connection using %s\n", SSL_get_cipher(_ssl));
 				/* Get Server certificate - optional */
