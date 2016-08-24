@@ -28,6 +28,9 @@ SSLSocket::~SSLSocket()
 	if (_socket != INVALID_SOCKET)
 		closesocket(_socket);
 
+	if (_peerCertificate != NULL)
+		X509_free(_peerCertificate);
+
 	if (_ssl != NULL)
 		SSL_free(_ssl);
 
@@ -47,8 +50,6 @@ int32_t SSLSocket::connect(string host, uint16_t port)
 
 int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 {
-	int32_t error = 0;
-	char* txt = NULL;
 	_host = host;
 	_port = port;
 	_timeout = timeout;
@@ -117,47 +118,8 @@ int32_t SSLSocket::connect(string host, uint16_t port, uint32_t timeout)
 			else{
 				cout << "Socket Connected" << endl;
 				u_long iMode = 0;
-				ioctlsocket(_socket, FIONBIO, (u_long FAR*)&iMode);
-				_ssl = SSL_new(ctx); 
-				if (_ssl == NULL)
-				{
-					cout << "SSL New Fail " << endl;
-					return -1;
-				}
-				
-				SSL_set_fd(_ssl, _socket);
-				error = SSL_connect(_ssl); 
-
-				if (error == -1)
-				{
-					ERR_print_errors_fp(stderr);
-					SSL_free(_ssl);
-					_ssl = NULL;
-					return -1;
-				}
-				_isEncrypted = true;
-				CHK_SSL(error);
-				printf("SSL connection using %s\n", SSL_get_cipher(_ssl));
-				/* Get Server certificate - optional */
-
-				scert = SSL_get_peer_certificate(_ssl); 
-				CHK_NULL(scert);
-				printf("Server Certificate:\n");
-
-				txt = X509_NAME_oneline(X509_get_subject_name(scert), 0, 0);
-				CHK_NULL(txt);
-				printf("Subject: %s\n", txt);
-				OPENSSL_free(txt);
-
-				txt = X509_NAME_oneline(X509_get_issuer_name(scert), 0, 0);
-				CHK_NULL(txt);
-				printf("Issuer: %s\n", txt);
-				OPENSSL_free(txt);
-
-				/* Here we can check what we wanted about the Server certificate */
-
-				X509_free(scert);
-				rc = 0;
+				ioctlsocket(_socket, FIONBIO, (u_long FAR*)&iMode);			
+				rc = _connectSSLSocket();
 			}
 		}
 	}
@@ -181,4 +143,75 @@ int32_t SSLSocket::recv(char * recvBuf, uint32_t recvLen)
 	if (_socket == INVALID_SOCKET || _ssl == NULL)
 		return -1;
 	return SSL_read(_ssl, recvBuf, recvLen);
+}
+
+int32_t SSLSocket::_connectSSLSocket(void)
+{
+	int32_t error = 0;
+	char* txt = NULL;
+
+	_ssl = SSL_new(ctx);
+	if (_ssl == NULL)
+	{
+		cout << "SSL New Fail " << endl;
+		return -1;
+	}
+
+	SSL_set_fd(_ssl, _socket);
+	error = SSL_connect(_ssl);
+	if (error == -1)
+	{
+		ERR_print_errors_fp(stderr);
+		SSL_free(_ssl);
+		_ssl = NULL;
+		return -1;
+	}
+
+	_isEncrypted = true;
+	CHK_SSL(error);
+	printf("SSL connection using %s\n", SSL_get_cipher(_ssl));
+	_cipherSuite = string(SSL_get_cipher(_ssl));
+	_peerCertificate = SSL_get_peer_certificate(_ssl);
+	
+	return 0;
+}
+
+string SSLSocket::cipherSuite(void)
+{
+	if (_isEncrypted != true || _socket == INVALID_SOCKET)
+		return "";
+	return _cipherSuite;
+}
+
+X509* SSLSocket::peerCertificate(void)
+{
+	if (_isEncrypted != true || _socket == INVALID_SOCKET )
+		return NULL;
+	return _peerCertificate;
+}
+
+string SSLSocket::peerCertificateString(void)
+{
+	char* txt = NULL;
+
+	if ( _isEncrypted != true || _socket == INVALID_SOCKET || \
+			_peerCertificate == NULL)
+		return "";
+
+	CHK_NULL(_peerCertificate);
+	printf("Server Certificate:\n");
+
+	txt = X509_NAME_oneline(X509_get_subject_name(_peerCertificate), 0, 0);
+	CHK_NULL(txt);
+	printf("Subject: %s\n", txt);
+	OPENSSL_free(txt);
+
+	txt = X509_NAME_oneline(X509_get_issuer_name(_peerCertificate), 0, 0);
+	CHK_NULL(txt);
+	printf("Issuer: %s\n", txt);
+	OPENSSL_free(txt);
+	BIO * outbio = BIO_new_fp(stdout, BIO_NOCLOSE);
+	X509_print(outbio, _peerCertificate);
+	system("pause");
+	return "";
 }

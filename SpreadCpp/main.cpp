@@ -68,6 +68,8 @@ int main(int argc, char ** argv)
 		"Host: www.random.org \r\n"
 		"Connection: close\r\n\r\n";
 	sslSocket.send((char *)testSSL.c_str(), testSSL.size());
+	cout << sslSocket.peerCertificateString() << endl;
+	//X509_NAME_oneline(X509_get_issuer_name(sslSocket.serverCert().get()), NULL, 0);
 	int len = 0;
 	do
 	{

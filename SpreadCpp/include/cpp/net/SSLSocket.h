@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <memory>
 #include <openssl/rsa.h>
 #include <openssl/crypto.h>
 #include <openssl/x509.h>
@@ -46,15 +47,17 @@ namespace cpp{
 			int32_t connect(string host, uint16_t port, int32_t cipherSuite, uint32_t timeout);
 			int32_t send(char * sendBuf, uint32_t sendSize);
 			int32_t recv(char * recvBuf, uint32_t recvLen);
-			string peerCertificate(void);
+			X509* peerCertificate(void);
+			string peerCertificateString(void);
+			string cipherSuite(void);
 			bool isEncrypted(void);
 
 		private:			
 			SSL* _ssl = NULL;
 			SSL_METHOD *meth;
-			X509* scert = NULL;
 			SSL_CTX *ctx = NULL;
-			string _peerCertificate;
+			X509* _peerCertificate = NULL;
+			string _cipherSuite;
 
 			string _host;
 			uint16_t _port;
