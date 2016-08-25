@@ -2,9 +2,17 @@
 
 int32_t HttpConnection::connectSocket(int32_t connectTimeout, int32_t readTimeout)
 {
-	if (_socket == nullptr)
-		_socket = make_shared<Socket>();
-	_socket->connect(_address, _port, connectTimeout);
+	if (_scheme.compare("https") == 0)
+	{
+		if (_sslSocket == nullptr)
+			_sslSocket = make_shared<SSLSocket>();
+		_sslSocket->connect(_address, _port, connectTimeout);
+	}else{
+		if (_socket == nullptr)
+			_socket = make_shared<Socket>();
+		_socket->connect(_address, _port, connectTimeout);
+	}
+	
 	return 0;
 }
 
@@ -30,17 +38,33 @@ int32_t HttpConnection::available(void)
 
 int32_t HttpConnection::read(char * buf, int32_t len)
 {
-	if (_socket == nullptr)
-		return -1;
+	if (_scheme.compare("https") == 0)
+	{
+		if (_sslSocket == nullptr)
+			return -1;
 
-	return _socket->recv(buf, len);;
+		return _sslSocket->recv(buf, len);;
+	}else{
+		if (_socket == nullptr)
+			return -1;
+
+		return _socket->recv(buf, len);;
+	}
+
 }
 
 int32_t HttpConnection::read(char * buf, int32_t len, int32_t offset)
 {
-	if (_socket == nullptr)
-		return -1;
-	return _socket->recv(buf, len);
+	if (_scheme.compare("https") == 0)
+	{
+		if (_sslSocket == nullptr)
+			return -1;
+		return _sslSocket->recv(buf, len);
+	}else{
+		if (_socket == nullptr)
+			return -1;
+		return _socket->recv(buf, len);
+	}
 }
 
 int32_t HttpConnection::skip(int32_t len)
@@ -52,14 +76,25 @@ string HttpConnection::readline()
 {
 	int rc = 0;
 	string line;
-
-	if (_socket == nullptr)
-		return "";
+	if (_scheme.compare("https") == 0)
+	{
+		if (_sslSocket == nullptr)
+			return "";
+	}
+	else
+	{
+		if (_socket == nullptr)
+			return "";
+	}
 
 	for (;;)
 	{
 		char c = '\0';
-		rc = _socket->recv(&c, 1);
+		if (_scheme.compare("https") == 0)
+			rc = _sslSocket->recv(&c, 1);
+		else
+			rc = _socket->recv(&c, 1);
+
 		if (rc <= 0)
 			return line;
 
@@ -78,14 +113,26 @@ string HttpConnection::readline()
 
 int32_t HttpConnection::write(char * buf, int32_t len)
 {
-	if (_socket == nullptr)
-		return -1;
-	return _socket->send(buf, len);
+	if (_scheme.compare("https") == 0)
+	{
+		if (_sslSocket == nullptr)
+			return -1;
+		return _sslSocket->send(buf, len);
+	}else{
+		if (_socket == nullptr)
+			return -1;
+		return _socket->send(buf, len);
+	}
 }
 
 bool HttpConnection::sameAddress(string address)
 {
 	return _address.compare(address) == 0;	
+}
+
+bool HttpConnection::sameScheme(string scheme)
+{
+	return _scheme.compare(scheme) == 0;
 }
 
 void HttpConnection::acquire(void)
@@ -100,8 +147,9 @@ void HttpConnection::release(void)
 	_idle = true;
 }
 
-void HttpConnection::setAddress(string address, uint16_t port)
+void HttpConnection::setAddress(string scheme, string address, uint16_t port)
 {
+	_scheme = scheme;
 	_address = address;
 	_port = port;
 }

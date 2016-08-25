@@ -166,7 +166,7 @@ HttpUrl HttpUrl::parse(string url)
 	}else if (String::regionMatches(url, startPos, string("https:"), 0, 6) == true)
 	{
 		httpUrl.scheme("https");
-		httpUrl.port(433);
+		httpUrl.port(443);
 	}
 
 	/* host */

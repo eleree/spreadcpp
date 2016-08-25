@@ -5,12 +5,14 @@ using namespace cpp::net;
 
 SSLSocket::SSLSocket(string method)
 {
+
 	/* Need to be replace by openssl method factory */
-	meth = (SSL_METHOD*)TLSv1_2_client_method();
+	meth = (SSL_METHOD*)HttpTlsVersion::tlsVersion(method);
 	if (meth == NULL)
 	{
-		cout << "Meth is Null" << endl;
+		cout << "Request method is not Support" << endl;
 		ERR_print_errors_fp(stderr);
+		return;
 	}
 	ctx = SSL_CTX_new(meth);
 	if (ctx == NULL)
@@ -23,7 +25,8 @@ SSLSocket::SSLSocket(string method)
 
 SSLSocket::SSLSocket()
 {
-
+	for (auto && x : HttpTlsVersion::supportTlsVersion())
+		cout << x << endl;
 	meth = (SSL_METHOD*)SSLv23_client_method();
 	if (meth == NULL)
 	{

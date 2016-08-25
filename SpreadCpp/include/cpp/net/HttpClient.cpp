@@ -66,6 +66,13 @@ HttpResponse HttpClient::retryAndFollowInterceptor(HttpRequest request)
 				break;
 			}// Http Code 200
 
+			if (httpResponse.httpStatus() == HttpStatus::HTTP_MOVED_PERM)
+			{
+				cout << "Resource Move Permantly" << endl;
+				request.url(httpResponse.header().get("Location"));
+				continue;
+			}
+
 			if (httpResponse.httpStatus() == HttpStatus::HTTP_MOVED_TEMP)
 			{
 				cout << "Redirect: " << httpResponse.header().get("Location")  << endl;
@@ -82,6 +89,7 @@ HttpResponse HttpClient::retryAndFollowInterceptor(HttpRequest request)
 
 				continue;
 			}// Http Code 302
+
 
 			return httpResponse;
 		}
@@ -131,7 +139,7 @@ HttpResponse HttpClient::CacheInterceptor(HttpRequest request)
 HttpResponse HttpClient::ConnectionInterceptor(HttpRequest request)
 {
 	HttpResponse httpResponse;
-	shared_ptr<HttpConnection> connection = _connectionPool->findIdleConnection(request.url().host());
+	shared_ptr<HttpConnection> connection = _connectionPool->findIdleConnection(request.url().scheme(), request.url().host());
 	if (connection == nullptr)
 	{
 		httpResponse.status(HttpResponse::NO_VALID_CONNECTION);
@@ -175,7 +183,7 @@ HttpResponse HttpClient::NetworkInterceptor(HttpRequest request, shared_ptr<Http
 		cout << a << endl;
 	auto address = ipv4Address.begin();
 	cout << "Use IP:" << *address << endl;
-	connection->setAddress(*address, request.url().port());
+	connection->setAddress(request.url().scheme(), *address, request.url().port());
 	connection->connectSocket(5000, 5000);
 
 	cout << "Start Connecting Socket" << endl;

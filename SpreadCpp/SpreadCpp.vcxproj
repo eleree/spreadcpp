@@ -88,6 +88,7 @@
     <ClInclude Include="include\cpp\net\HttpResponseBody.h" />
     <ClInclude Include="include\cpp\net\HttpRouteDatabase.h" />
     <ClInclude Include="include\cpp\net\HttpStatus.h" />
+    <ClInclude Include="include\cpp\net\HttpTlsVersion.h" />
     <ClInclude Include="include\cpp\net\HttpUrl.h" />
     <ClInclude Include="include\cpp\net\Socket.h" />
     <ClInclude Include="include\cpp\net\SocketFactory.h" />
@@ -108,6 +109,7 @@
     <ClCompile Include="include\cpp\net\HttpClient.cpp" />
     <ClCompile Include="include\cpp\net\HttpConnection.cpp" />
     <ClCompile Include="include\cpp\net\HttpConnectionPool.cpp" />
+    <ClCompile Include="include\cpp\net\HttpTlsVersion.cpp" />
     <ClCompile Include="include\cpp\net\HttpUrl.cpp" />
     <ClCompile Include="include\cpp\net\Socket.cpp" />
     <ClCompile Include="include\cpp\net\SSLSocket.cpp" />

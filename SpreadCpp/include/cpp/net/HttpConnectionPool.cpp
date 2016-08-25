@@ -8,14 +8,16 @@ HttpConnectionPool::HttpConnectionPool(int32_t maxCount)
 	}
 }
 
-shared_ptr<HttpConnection> HttpConnectionPool::findIdleConnection(string host)
+shared_ptr<HttpConnection> HttpConnectionPool::findIdleConnection(string scheme, string host)
 {
 	std::lock_guard<std::mutex> lock(_mutex);
 	for (auto & c : _httpConnectionPool)
 	{
-		if (c->idle() == true && c->sameAddress(host) == true )
+		if (c->idle() == true && c->sameAddress(host) == true && \
+			c->sameScheme(scheme) == true )
 		{
 			//Found a connection with same 
+			cout << "Use Cahced Connection " << scheme << ":" << host << endl;
 			c->acquire();
 			return c;			
 		}

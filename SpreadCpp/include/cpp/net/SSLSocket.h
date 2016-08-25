@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <string>
 #include <memory>
 #include <openssl/rsa.h>
 #include <openssl/crypto.h>
@@ -26,7 +27,7 @@
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
-
+#include <cpp/net/HttpTlsVersion.h>
 using namespace std;
 
 //Download OpenSSL from http://www.npcglib.org/~stathis/downloads/openssl-1.0.1t-vs2013.7z

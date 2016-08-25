@@ -21,6 +21,7 @@ namespace cpp{
 		class HttpConnection{
 		#define HTTP_CONNECTION_MAX_BUFFER_SIZE	512
 		public:
+						
 			HttpConnection() {
 				_socket = nullptr;
 				_idle = true;
@@ -34,7 +35,7 @@ namespace cpp{
 			void release(void);
 
 			string address(void);
-			void setAddress(string address, uint16_t port);
+			void setAddress(string scheme, string address, uint16_t port);
 
 			int32_t connectSocket(int32_t connectTimeout, int32_t readTimeout);
 			int32_t connectSSLScoket(int32_t connectTimeout, int32_t readTimeout);
@@ -49,11 +50,13 @@ namespace cpp{
 			int32_t write(char * buf, int32_t len);
 
 			bool sameAddress(string address);
+			bool sameScheme(string scheme);
 
 		private:
 			bool _idle;			
 			std::mutex _mutex;
 			int32_t _type; // socket or ssl socket
+			string _scheme; // which scheme this connection connects to
 			string _address; // which address this connection connects to
 			uint16_t _port;
 			uint64_t _expireTime; 

@@ -15,7 +15,7 @@ namespace cpp{
 		public:
 			HttpConnectionPool(){};
 			HttpConnectionPool(int32_t maxCount);
-			shared_ptr<HttpConnection> findIdleConnection(string host);
+			shared_ptr<HttpConnection> findIdleConnection(string scheme, string host);
 
 		private:
 			int32_t _maxCount;

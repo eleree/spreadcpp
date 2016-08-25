@@ -64,7 +64,7 @@ int main(int argc, char ** argv)
 	SSL_load_error_strings();
 
 	Socket socket;
-	SSLSocket sslSocket;
+	SSLSocket sslSocket("SSLv2");
 	sslSocket.connect("104.20.45.7", 443);
 	//sslSocket.connect("42.96.206.207", 80);
 	string testSSL = "GET /cgi-bin/randbyte?nbytes=32&format=h HTTP/1.1\r\n"
